@@ -580,15 +580,12 @@
                         <td>${member.battlePower || 1000}</td>
                         <td>${packName}</td>
                         <td>
-                            <button class="btn btn-sm btn-info view-member" data-id="${
-                              member.id
-                            }">Просмотр</button>
-                            <button class="btn btn-sm btn-primary edit-member" data-id="${
-                              member.id
-                            }">Редактировать</button>
-                            <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${
-                              member.id
-                            }">Удалить</button>
+                            ${
+                              isAdmin()
+                                ? `<button class="btn btn-sm btn-primary edit-member" data-id="${member.id}">Редактировать</button>
+                            <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${member.id}">Удалить</button>`
+                                : ""
+                            }
                         </td>
                     </tr>
                 `;

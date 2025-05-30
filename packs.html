@@ -436,7 +436,6 @@
                                     <th>Ник</th>
                                     <th>Класс</th>
                                     <th>Уровень</th>
-                                    <th>Статус</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -452,13 +451,6 @@
                                 ${member.class}
                             </td>
                             <td>${member.level}</td>
-                            <td>
-                                ${
-                                  member.active
-                                    ? '<span class="badge bg-success">Активен</span>'
-                                    : '<span class="badge bg-danger">Неактивен</span>'
-                                }
-                            </td>
                         </tr>
                     `;
           });
