@@ -481,15 +481,16 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth.js"></script>
-    <script src="api.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
       const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
       const supabaseKey =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
       const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
+    </script>
+    <script src="auth.js"></script>
+    <script src="api.js"></script>
+    <script>
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
@@ -497,7 +498,6 @@
       if (!isLoggedIn()) {
         window.location.href = "login.html";
       } else if (!isAdmin()) {
-        // Если пользователь не администратор, перенаправляем на статистику
         window.location.href = "statistics.html";
       }
 
@@ -618,28 +618,28 @@
           }
 
           html += `
-                    <tr data-pack-id="${member.pack_id || 0}">
-                        <td>${index + 1}</td>
-                        <td>${member.nickname || "-"}</td>
-                        <td>${member.telegram_username || "-"}</td>
-                        <td>
-                            <span class="class-icon class-${(
-                              member.class || ""
-                            ).toLowerCase()}"></span>
-                            ${member.class || "-"}
-                        </td>
-                        <td>${member.battle_power || 1000}</td>
-                        <td>${packName}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary edit-member" data-id="${
-                              member.id
-                            }">Редактировать</button>
-                            <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${
-                              member.id
-                            }">Удалить</button>
-                        </td>
-                    </tr>
-                `;
+            <tr data-pack-id="${member.pack_id || 0}">
+                <td>${index + 1}</td>
+                <td>${member.nickname || "-"}</td>
+                <td>${member.telegram_username || "-"}</td>
+                <td>
+                    <span class="class-icon class-${(
+                      member.class || ""
+                    ).toLowerCase()}"></span>
+                    ${member.class || "-"}
+                </td>
+                <td>${member.battle_power || 1000}</td>
+                <td>${packName}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit-member" data-id="${
+                      member.id
+                    }">Редактировать</button>
+                    <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${
+                      member.id
+                    }">Удалить</button>
+                </td>
+            </tr>
+          `;
         });
 
         html += `

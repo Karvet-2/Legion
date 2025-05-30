@@ -331,23 +331,58 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth.js"></script>
-    <script src="main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
     <script>
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
-      // Проверка авторизации
-      if (!isLoggedIn()) {
-        window.location.href = "login.html";
-      } else if (!isAdmin()) {
-        // Если пользователь не администратор, перенаправляем на статистику
-        window.location.href = "statistics.html";
+      // Получить все события
+      async function getAllEvents() {
+        const { data, error } = await supabase.from("events").select("*");
+        if (error) {
+          alert("Ошибка загрузки событий: " + error.message);
+          return [];
+        }
+        return data;
+      }
+
+      // Добавить событие
+      async function saveEvent(event) {
+        const { data, error } = await supabase.from("events").insert([event]);
+        if (error) {
+          alert("Ошибка добавления события: " + error.message);
+        }
+        return data;
+      }
+
+      // Обновить событие
+      async function updateEvent(id, event) {
+        const { error } = await supabase
+          .from("events")
+          .update(event)
+          .eq("id", id);
+        if (error) {
+          alert("Ошибка обновления события: " + error.message);
+        }
+      }
+
+      // Удалить событие
+      async function deleteEvent(id) {
+        const { error } = await supabase.from("events").delete().eq("id", id);
+        if (error) {
+          alert("Ошибка удаления события: " + error.message);
+        }
       }
 
       // Загрузка списка событий
-      function loadEvents() {
-        const events = getAllEvents();
+      async function loadEvents() {
+        const events = await getAllEvents();
         const container = document.getElementById("eventsTableContainer");
         const totalEventsElement = document.getElementById("totalEvents");
 
@@ -359,9 +394,6 @@
           return;
         }
 
-        // Сортировка событий по дате (новые сверху)
-        events.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         let html = `
                 <div class="table-responsive">
                     <table class="table table-striped table-hover filterable-table">
@@ -371,7 +403,7 @@
                                 <th>Название</th>
                                 <th>Тип</th>
                                 <th>Дата и время</th>
-                                <th>Посещаемость</th>
+                                <th>Описание</th>
                                 <th>Действия</th>
                             </tr>
                         </thead>
@@ -379,68 +411,23 @@
             `;
 
         events.forEach((event, index) => {
-          // Получение посещаемости для события
-          const attendance = getAttendanceByEvent(event.id);
-          const attendanceCount = attendance ? attendance.memberIds.length : 0;
-
-          // Форматирование типа события
-          let eventTypeDisplay;
-          switch (event.type) {
-            case "Raid":
-              eventTypeDisplay = "Рейд";
-              break;
-            case "Dungeon":
-              eventTypeDisplay = "Подземелье";
-              break;
-            case "WorldBoss":
-              eventTypeDisplay = "Мировой босс";
-              break;
-            case "GuildWar":
-              eventTypeDisplay = "Война гильдий";
-              break;
-            case "Other":
-              eventTypeDisplay = "Другое";
-              break;
-            default:
-              eventTypeDisplay = event.type;
-          }
-
-          // Определение класса для строки таблицы в зависимости от даты события
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const eventDate = new Date(event.date);
-          eventDate.setHours(0, 0, 0, 0);
-
-          let rowClass = "";
-          if (eventDate < today) {
-            rowClass = "table-secondary"; // Прошедшее событие
-          } else if (eventDate.getTime() === today.getTime()) {
-            rowClass = "table-primary"; // Сегодняшнее событие
-          }
-
           html += `
-                    <tr class="${rowClass}" data-event-type="${event.type}">
-                        <td>${index + 1}</td>
-                        <td>${event.title}</td>
-                        <td>${eventTypeDisplay}</td>
-                        <td>${formatDate(event.date + " " + event.time)}</td>
-                        <td>${attendanceCount} участников</td>
-                        <td>
-                            <button class="btn btn-sm btn-info view-event" data-id="${
-                              event.id
-                            }">Просмотр</button>
-                            <button class="btn btn-sm btn-success attendance-event" data-id="${
-                              event.id
-                            }">Посещаемость</button>
-                            <button class="btn btn-sm btn-primary edit-event" data-id="${
-                              event.id
-                            }">Редактировать</button>
-                            <button class="btn btn-sm btn-danger delete-event delete-confirm" data-id="${
-                              event.id
-                            }">Удалить</button>
-                        </td>
-                    </tr>
-                `;
+            <tr data-event-id="${event.id}">
+                <td>${index + 1}</td>
+                <td>${event.title || "-"}</td>
+                <td>${event.type || "-"}</td>
+                <td>${event.date || "-"} ${event.time || ""}</td>
+                <td>${event.description || "-"}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit-event" data-id="${
+                      event.id
+                    }">Редактировать</button>
+                    <button class="btn btn-sm btn-danger delete-event" data-id="${
+                      event.id
+                    }">Удалить</button>
+                </td>
+            </tr>
+          `;
         });
 
         html += `
@@ -451,215 +438,53 @@
 
         container.innerHTML = html;
 
-        // Обработка кнопок действий
-        document.querySelectorAll(".view-event").forEach((btn) => {
-          btn.addEventListener("click", function () {
-            const id = parseInt(this.getAttribute("data-id"));
-            viewEvent(id);
-          });
-        });
-
-        document.querySelectorAll(".attendance-event").forEach((btn) => {
-          btn.addEventListener("click", function () {
-            const id = parseInt(this.getAttribute("data-id"));
-            openAttendanceModal(id);
-          });
-        });
-
         document.querySelectorAll(".edit-event").forEach((btn) => {
-          btn.addEventListener("click", function () {
+          btn.addEventListener("click", async function () {
             const id = parseInt(this.getAttribute("data-id"));
-            openEditModal(id);
+            const { data, error } = await supabase
+              .from("events")
+              .select("*")
+              .eq("id", id)
+              .single();
+            if (error || !data) {
+              alert("Ошибка загрузки события для редактирования");
+              return;
+            }
+            document.getElementById("editEventId").value = data.id;
+            document.getElementById("editTitle").value = data.title || "";
+            document.getElementById("editType").value = data.type || "";
+            document.getElementById("editDate").value = data.date || "";
+            document.getElementById("editTime").value = data.time || "";
+            document.getElementById("editDescription").value =
+              data.description || "";
+            const modal = new bootstrap.Modal(
+              document.getElementById("editEventModal")
+            );
+            modal.show();
           });
         });
-
         document.querySelectorAll(".delete-event").forEach((btn) => {
-          btn.addEventListener("click", function () {
+          btn.addEventListener("click", async function () {
             const id = parseInt(this.getAttribute("data-id"));
-            if (
-              confirm(
-                "Вы уверены, что хотите удалить это событие? Все данные о посещаемости также будут удалены."
-              )
-            ) {
-              deleteEvent(id);
-              loadEvents();
+            if (confirm("Вы уверены, что хотите удалить это событие?")) {
+              await deleteEvent(id);
+              await loadEvents();
             }
           });
         });
-
-        // Фильтрация по типу события
-        document
-          .getElementById("eventTypeFilter")
-          .addEventListener("change", function () {
-            const eventType = this.value;
-            const rows = document.querySelectorAll(
-              ".filterable-table tbody tr"
-            );
-
-            rows.forEach((row) => {
-              if (
-                eventType === "all" ||
-                row.getAttribute("data-event-type") === eventType
-              ) {
-                row.style.display = "";
-              } else {
-                row.style.display = "none";
-              }
-            });
-          });
       }
 
-      // Открытие модального окна для редактирования
-      function openEditModal(id) {
-        const event = getEventById(id);
-        if (!event) return;
-
-        document.getElementById("editEventId").value = event.id;
-        document.getElementById("editTitle").value = event.title;
-        document.getElementById("editType").value = event.type;
-        document.getElementById("editDate").value = event.date;
-        document.getElementById("editTime").value = event.time;
-        document.getElementById("editDescription").value =
-          event.description || "";
-
-        const modal = new bootstrap.Modal(
-          document.getElementById("editEventModal")
-        );
-        modal.show();
-      }
-
-      // Открытие модального окна для управления посещаемостью
-      function openAttendanceModal(id) {
-        const event = getEventById(id);
-        if (!event) return;
-
-        const members = getAllMembers().filter((member) => member.active);
-        const attendance = getAttendanceByEvent(event.id);
-        const attendedMemberIds = attendance ? attendance.memberIds : [];
-
-        document.getElementById("attendanceEventTitle").textContent =
-          event.title;
-        document.getElementById("attendanceEventDate").textContent = formatDate(
-          event.date + " " + event.time
-        );
-
-        const membersListContainer = document.getElementById(
-          "membersAttendanceList"
-        );
-
-        if (members.length === 0) {
-          membersListContainer.innerHTML =
-            '<div class="alert alert-warning">Нет активных участников для отметки посещаемости.</div>';
-        } else {
-          let html = `<div class="row">`;
-
-          members.forEach((member) => {
-            const isAttended = attendedMemberIds.includes(member.id);
-            html += `
-                        <div class="col-md-6 mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input member-attendance" type="checkbox" 
-                                    id="member_${member.id}" data-id="${
-              member.id
-            }" ${isAttended ? "checked" : ""}>
-                                <label class="form-check-label" for="member_${
-                                  member.id
-                                }">
-                                    <span class="class-icon class-${member.class.toLowerCase()}"></span>
-                                    ${member.nickname} (${member.class})
-                                </label>
-                            </div>
-                        </div>
-                    `;
-          });
-
-          html += `</div>`;
-          membersListContainer.innerHTML = html;
-        }
-
-        // Сохранение данных о посещаемости
-        document
-          .getElementById("saveAttendance")
-          .setAttribute("data-event-id", event.id);
-
-        const modal = new bootstrap.Modal(
-          document.getElementById("attendanceModal")
-        );
-        modal.show();
-      }
-
-      // Просмотр информации о событии
-      function viewEvent(id) {
-        const event = getEventById(id);
-        if (!event) return;
-
-        // Получение посещаемости
-        const attendance = getAttendanceByEvent(event.id);
-        const attendedMemberIds = attendance ? attendance.memberIds : [];
-
-        // Получение списка участников, которые присутствовали
-        let attendedMembers = "";
-        if (attendedMemberIds.length > 0) {
-          const members = getAllMembers();
-          attendedMembers = attendedMemberIds
-            .map((memberId) => {
-              const member = members.find((m) => m.id === memberId);
-              return member ? member.nickname : "Неизвестный участник";
-            })
-            .join(", ");
-        } else {
-          attendedMembers = "Нет данных о посещаемости";
-        }
-
-        // Форматирование типа события
-        let eventTypeDisplay;
-        switch (event.type) {
-          case "Raid":
-            eventTypeDisplay = "Рейд";
-            break;
-          case "Dungeon":
-            eventTypeDisplay = "Подземелье";
-            break;
-          case "WorldBoss":
-            eventTypeDisplay = "Мировой босс";
-            break;
-          case "GuildWar":
-            eventTypeDisplay = "Война гильдий";
-            break;
-          case "Other":
-            eventTypeDisplay = "Другое";
-            break;
-          default:
-            eventTypeDisplay = event.type;
-        }
-
-        alert(`
-                Информация о событии:
-                
-                Название: ${event.title}
-                Тип: ${eventTypeDisplay}
-                Дата и время: ${formatDate(event.date + " " + event.time)}
-                Описание: ${event.description || "-"}
-                
-                Посещаемость: ${attendedMemberIds.length} участников
-                ${attendedMembers}
-                
-                Дата создания: ${formatDate(event.createdAt)}
-            `);
-      }
-
-      // Инициализация страницы
       document.addEventListener("DOMContentLoaded", function () {
         loadEvents();
 
-        // Сохранение нового события
         document
           .getElementById("saveNewEvent")
-          .addEventListener("click", function () {
+          .addEventListener("click", async function () {
             const title = document.getElementById("title").value;
             const type = document.getElementById("type").value;
             const date = document.getElementById("date").value;
             const time = document.getElementById("time").value;
+            const description = document.getElementById("description").value;
 
             if (!title || !type || !date || !time) {
               alert("Пожалуйста, заполните обязательные поля");
@@ -671,33 +496,29 @@
               type: type,
               date: date,
               time: time,
-              description: document.getElementById("description").value,
+              description: description,
             };
 
-            saveEvent(event);
+            await saveEvent(event);
 
-            // Скрываем модальное окно
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("addEventModal")
             );
             modal.hide();
-
-            // Очищаем форму
             document.getElementById("addEventForm").reset();
-
-            // Обновляем список событий
-            loadEvents();
+            await loadEvents();
           });
 
-        // Сохранение изменений события
         document
           .getElementById("saveEditEvent")
-          .addEventListener("click", function () {
+          .addEventListener("click", async function () {
             const id = parseInt(document.getElementById("editEventId").value);
             const title = document.getElementById("editTitle").value;
             const type = document.getElementById("editType").value;
             const date = document.getElementById("editDate").value;
             const time = document.getElementById("editTime").value;
+            const description =
+              document.getElementById("editDescription").value;
 
             if (!title || !type || !date || !time) {
               alert("Пожалуйста, заполните обязательные поля");
@@ -705,48 +526,20 @@
             }
 
             const event = {
-              id: id,
               title: title,
               type: type,
               date: date,
               time: time,
-              description: document.getElementById("editDescription").value,
+              description: description,
             };
 
-            saveEvent(event);
+            await updateEvent(id, event);
 
-            // Скрываем модальное окно
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("editEventModal")
             );
             modal.hide();
-
-            // Обновляем список событий
-            loadEvents();
-          });
-
-        // Сохранение данных о посещаемости
-        document
-          .getElementById("saveAttendance")
-          .addEventListener("click", function () {
-            const eventId = parseInt(this.getAttribute("data-event-id"));
-            const checkedMembers = document.querySelectorAll(
-              ".member-attendance:checked"
-            );
-            const memberIds = Array.from(checkedMembers).map((checkbox) =>
-              parseInt(checkbox.getAttribute("data-id"))
-            );
-
-            saveAttendance(eventId, memberIds);
-
-            // Скрываем модальное окно
-            const modal = bootstrap.Modal.getInstance(
-              document.getElementById("attendanceModal")
-            );
-            modal.hide();
-
-            // Обновляем список событий
-            loadEvents();
+            await loadEvents();
           });
       });
     </script>
