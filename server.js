@@ -8,6 +8,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const { Telegraf } = require('telegraf');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
 
 // Настройки окружения
 dotenv.config();
@@ -67,9 +68,9 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 // Middleware для проверки авторизации
 const authenticateToken = (req, res, next) => {
