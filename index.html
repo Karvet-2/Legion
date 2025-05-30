@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Гильдия Legion</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="py-3">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="mb-0">
+              <a href="index.html" class="text-white text-decoration-none">
+                <i class="fas fa-dragon me-2"></i>Legion
+              </a>
+            </h1>
+          </div>
+          <div class="col-md-6">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="index.html">
+                      <i class="fas fa-home me-1"></i> Главная
+                    </a>
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="members.html">
+                      <i class="fas fa-users me-1"></i> Участники
+                    </a>
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="events.html">
+                      <i class="fas fa-calendar-alt me-1"></i> События
+                    </a>
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="packs.html">
+                      <i class="fas fa-layer-group me-1"></i> Круги
+                    </a>
+                  </li>
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <a class="nav-link" href="statistics.html">
+                      <i class="fas fa-chart-bar me-1"></i> Статистика
+                    </a>
+                  </li>
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <a class="nav-link" href="#" id="logoutBtn">
+                      <i class="fas fa-sign-out-alt me-1"></i> Выход
+                    </a>
+                  </li>
+                  <li class="nav-item logged-out-only">
+                    <a class="nav-link" href="login.html">
+                      <i class="fas fa-sign-in-alt me-1"></i> Вход
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Параллакс баннер -->
+    <div class="parallax-container">
+      <div class="parallax-content">
+        <h1>Добро пожаловать в Legion</h1>
+        <p class="lead">
+          Объединяйтесь с лучшими игроками и покоряйте вершины вместе с нами
+        </p>
+        <a href="login.html" class="btn btn-primary btn-lg logged-out-only">
+          <i class="fas fa-user-plus me-2"></i> Присоединиться
+        </a>
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h2><i class="fas fa-info-circle me-2"></i> О гильдии Legion</h2>
+            </div>
+            <div class="card-body">
+              <p class="lead">
+                Мы - элитное сообщество игроков, объединенных общей целью -
+                стать лучшими и покорить все вершины игрового мира.
+              </p>
+
+              <div class="alert alert-info logged-out-only">
+                <p class="mb-0">
+                  <i class="fas fa-info-circle me-2"></i> Пожалуйста,
+                  <a href="login.html" class="alert-link">войдите</a>, чтобы
+                  получить доступ к функциям управления гильдией.
+                </p>
+              </div>
+
+              <div class="row mt-4 logged-in-only" style="display: none">
+                <div class="col-md-4 mb-3 admin-only" style="display: none">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <div class="feature-icon mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                      </div>
+                      <h5 class="card-title">Управление участниками</h5>
+                      <p class="card-text">
+                        Добавление, удаление и редактирование участников
+                        гильдии.
+                      </p>
+                      <a href="members.html" class="btn btn-primary">
+                        <i class="fas fa-arrow-right me-1"></i> Перейти
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3 admin-only" style="display: none">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <div class="feature-icon mb-3">
+                        <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                      </div>
+                      <h5 class="card-title">События</h5>
+                      <p class="card-text">
+                        Управление событиями гильдии и отметка посещаемости.
+                      </p>
+                      <a href="events.html" class="btn btn-primary">
+                        <i class="fas fa-arrow-right me-1"></i> Перейти
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <div class="feature-icon mb-3">
+                        <i class="fas fa-chart-bar fa-3x text-primary"></i>
+                      </div>
+                      <h5 class="card-title">Статистика</h5>
+                      <p class="card-text">
+                        Просмотр статистики посещаемости и активности
+                        участников.
+                      </p>
+                      <a href="statistics.html" class="btn btn-primary">
+                        <i class="fas fa-arrow-right me-1"></i> Перейти
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Информационные блоки -->
+      <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h3><i class="fas fa-bullseye me-2"></i> Наши цели</h3>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <i class="fas fa-trophy me-2 text-success"></i> Стать
+                  сильнейшей гильдией на сервере
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-hands-helping me-2 text-success"></i>
+                  Помогать новым игрокам в развитии
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-users me-2 text-success"></i> Создать дружное
+                  и сплоченное сообщество
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-calendar-check me-2 text-success"></i>
+                  Регулярно проводить совместные активности
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header bg-info text-white">
+              <h3><i class="fas fa-medal me-2"></i> Преимущества гильдии</h3>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <i class="fas fa-user-shield me-2 text-info"></i> Активное
+                  сообщество опытных игроков
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-hiking me-2 text-info"></i> Регулярные
+                  совместные походы и мероприятия
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-graduation-cap me-2 text-info"></i> Система
+                  поддержки и наставничества
+                </li>
+                <li class="list-group-item">
+                  <i class="fas fa-balance-scale me-2 text-info"></i>
+                  Справедливое распределение добычи
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-12 mb-4">
+          <div class="card">
+            <div class="card-header bg-warning text-dark">
+              <h3><i class="fas fa-rocket me-2"></i> Готовящиеся обновления</h3>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-info">
+                <h4>
+                  <i class="fas fa-bell me-2"></i> Скоро на нашем портале:
+                </h4>
+                <ul class="list-unstyled mt-3">
+                  <li class="mb-3">
+                    <div class="d-flex align-items-center">
+                      <div class="feature-icon me-3">
+                        <i class="fab fa-telegram fa-2x text-primary"></i>
+                      </div>
+                      <div>
+                        <strong>Авторизация через Telegram</strong>
+                        <p class="mb-0">
+                          Упрощенный вход с помощью вашего Telegram аккаунта
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="mb-3">
+                    <div class="d-flex align-items-center">
+                      <div class="feature-icon me-3">
+                        <i class="fas fa-users-cog fa-2x text-primary"></i>
+                      </div>
+                      <div>
+                        <strong>Создание кругов участниками</strong>
+                        <p class="mb-0">
+                          Возможность для всех участников создавать собственные
+                          круги и управлять ими
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="d-flex align-items-center">
+                      <div class="feature-icon me-3">
+                        <i class="fas fa-clipboard-list fa-2x text-primary"></i>
+                      </div>
+                      <div>
+                        <strong>Система заявок</strong>
+                        <p class="mb-0">
+                          Удобная подача заявок на вступление в круги
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5><i class="fas fa-dragon me-2"></i> Гильдия Legion</h5>
+            <p>
+              Сайт для управления гильдией и отслеживания статистики участников.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="social-icons mb-3">
+              <a href="#" class="text-light me-3"
+                ><i class="fab fa-discord fa-lg"></i
+              ></a>
+              <a href="#" class="text-light me-3"
+                ><i class="fab fa-telegram fa-lg"></i
+              ></a>
+              <a href="#" class="text-light"><i class="fab fa-vk fa-lg"></i></a>
+            </div>
+            <p>&copy; <span id="currentYear"></span> Все права защищены.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

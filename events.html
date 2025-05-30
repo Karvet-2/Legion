@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>События гильдии - Perfect World Mobile</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="bg-dark text-white py-3">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="mb-0">
+              <a href="index.html" class="text-white text-decoration-none"
+                >Гильдия Perfect World Mobile</a
+              >
+            </h1>
+          </div>
+          <div class="col-md-6">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index.html">Главная</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="members.html">Участники</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="events.html">События</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="packs.html">Круги</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="statistics.html">Статистика</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutBtn">Выход</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div
+              class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+            >
+              <h2 class="mb-0">События гильдии</h2>
+              <button
+                class="btn btn-light"
+                data-bs-toggle="modal"
+                data-bs-target="#addEventModal"
+              >
+                Добавить событие
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <input
+                    type="text"
+                    id="tableFilter"
+                    class="form-control"
+                    placeholder="Поиск по событиям..."
+                  />
+                </div>
+                <div class="col-md-6">
+                  <select id="eventTypeFilter" class="form-select">
+                    <option value="all">Все типы событий</option>
+                    <option value="Raid">Рейд</option>
+                    <option value="Dungeon">Подземелье</option>
+                    <option value="WorldBoss">Мировой босс</option>
+                    <option value="GuildWar">Война гильдий</option>
+                    <option value="Other">Другое</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="eventsTableContainer">
+                <div class="alert alert-info">Загрузка данных...</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between">
+                <span>Всего событий: <strong id="totalEvents">0</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно добавления события -->
+    <div class="modal fade" id="addEventModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Добавление нового события</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addEventForm">
+              <div class="mb-3">
+                <label for="title" class="form-label">Название *</label>
+                <input type="text" class="form-control" id="title" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="type" class="form-label">Тип *</label>
+                <select class="form-select" id="type" required>
+                  <option value="">Выберите тип</option>
+                  <option value="Raid">Рейд</option>
+                  <option value="Dungeon">Подземелье</option>
+                  <option value="WorldBoss">Мировой босс</option>
+                  <option value="GuildWar">Война гильдий</option>
+                  <option value="Other">Другое</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="date" class="form-label">Дата *</label>
+                <input type="date" class="form-control" id="date" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="time" class="form-label">Время *</label>
+                <input type="time" class="form-control" id="time" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Описание</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="saveNewEvent">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно редактирования события -->
+    <div
+      class="modal fade"
+      id="editEventModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Редактирование события</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editEventForm">
+              <input type="hidden" id="editEventId" />
+              <div class="mb-3">
+                <label for="editTitle" class="form-label">Название *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editTitle"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editType" class="form-label">Тип *</label>
+                <select class="form-select" id="editType" required>
+                  <option value="">Выберите тип</option>
+                  <option value="Raid">Рейд</option>
+                  <option value="Dungeon">Подземелье</option>
+                  <option value="WorldBoss">Мировой босс</option>
+                  <option value="GuildWar">Война гильдий</option>
+                  <option value="Other">Другое</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="editDate" class="form-label">Дата *</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="editDate"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editTime" class="form-label">Время *</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  id="editTime"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editDescription" class="form-label">Описание</label>
+                <textarea
+                  class="form-control"
+                  id="editDescription"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="saveEditEvent">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно управления посещаемостью -->
+    <div
+      class="modal fade"
+      id="attendanceModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Управление посещаемостью</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h5 id="attendanceEventTitle">Загрузка...</h5>
+            <p id="attendanceEventDate">Загрузка...</p>
+
+            <div class="alert alert-info mb-3">
+              Отметьте участников, которые присутствовали на событии.
+            </div>
+
+            <div id="membersAttendanceList">
+              <div class="alert alert-info">Загрузка списка участников...</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="saveAttendance">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Гильдия Perfect World Mobile</h5>
+            <p>
+              Сайт для управления гильдией и отслеживания статистики участников.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p>&copy; <span id="currentYear"></span> Все права защищены.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+
+      // Проверка авторизации
+      if (!isLoggedIn()) {
+        window.location.href = "login.html";
+      } else if (!isAdmin()) {
+        // Если пользователь не администратор, перенаправляем на статистику
+        window.location.href = "statistics.html";
+      }
+
+      // Загрузка списка событий
+      function loadEvents() {
+        const events = getAllEvents();
+        const container = document.getElementById("eventsTableContainer");
+        const totalEventsElement = document.getElementById("totalEvents");
+
+        totalEventsElement.textContent = events.length;
+
+        if (events.length === 0) {
+          container.innerHTML =
+            '<div class="alert alert-info">События не найдены. Добавьте первое событие!</div>';
+          return;
+        }
+
+        // Сортировка событий по дате (новые сверху)
+        events.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        let html = `
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover filterable-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Название</th>
+                                <th>Тип</th>
+                                <th>Дата и время</th>
+                                <th>Посещаемость</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+        events.forEach((event, index) => {
+          // Получение посещаемости для события
+          const attendance = getAttendanceByEvent(event.id);
+          const attendanceCount = attendance ? attendance.memberIds.length : 0;
+
+          // Форматирование типа события
+          let eventTypeDisplay;
+          switch (event.type) {
+            case "Raid":
+              eventTypeDisplay = "Рейд";
+              break;
+            case "Dungeon":
+              eventTypeDisplay = "Подземелье";
+              break;
+            case "WorldBoss":
+              eventTypeDisplay = "Мировой босс";
+              break;
+            case "GuildWar":
+              eventTypeDisplay = "Война гильдий";
+              break;
+            case "Other":
+              eventTypeDisplay = "Другое";
+              break;
+            default:
+              eventTypeDisplay = event.type;
+          }
+
+          // Определение класса для строки таблицы в зависимости от даты события
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const eventDate = new Date(event.date);
+          eventDate.setHours(0, 0, 0, 0);
+
+          let rowClass = "";
+          if (eventDate < today) {
+            rowClass = "table-secondary"; // Прошедшее событие
+          } else if (eventDate.getTime() === today.getTime()) {
+            rowClass = "table-primary"; // Сегодняшнее событие
+          }
+
+          html += `
+                    <tr class="${rowClass}" data-event-type="${event.type}">
+                        <td>${index + 1}</td>
+                        <td>${event.title}</td>
+                        <td>${eventTypeDisplay}</td>
+                        <td>${formatDate(event.date + " " + event.time)}</td>
+                        <td>${attendanceCount} участников</td>
+                        <td>
+                            <button class="btn btn-sm btn-info view-event" data-id="${
+                              event.id
+                            }">Просмотр</button>
+                            <button class="btn btn-sm btn-success attendance-event" data-id="${
+                              event.id
+                            }">Посещаемость</button>
+                            <button class="btn btn-sm btn-primary edit-event" data-id="${
+                              event.id
+                            }">Редактировать</button>
+                            <button class="btn btn-sm btn-danger delete-event delete-confirm" data-id="${
+                              event.id
+                            }">Удалить</button>
+                        </td>
+                    </tr>
+                `;
+        });
+
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+        container.innerHTML = html;
+
+        // Обработка кнопок действий
+        document.querySelectorAll(".view-event").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            viewEvent(id);
+          });
+        });
+
+        document.querySelectorAll(".attendance-event").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            openAttendanceModal(id);
+          });
+        });
+
+        document.querySelectorAll(".edit-event").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            openEditModal(id);
+          });
+        });
+
+        document.querySelectorAll(".delete-event").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            if (
+              confirm(
+                "Вы уверены, что хотите удалить это событие? Все данные о посещаемости также будут удалены."
+              )
+            ) {
+              deleteEvent(id);
+              loadEvents();
+            }
+          });
+        });
+
+        // Фильтрация по типу события
+        document
+          .getElementById("eventTypeFilter")
+          .addEventListener("change", function () {
+            const eventType = this.value;
+            const rows = document.querySelectorAll(
+              ".filterable-table tbody tr"
+            );
+
+            rows.forEach((row) => {
+              if (
+                eventType === "all" ||
+                row.getAttribute("data-event-type") === eventType
+              ) {
+                row.style.display = "";
+              } else {
+                row.style.display = "none";
+              }
+            });
+          });
+      }
+
+      // Открытие модального окна для редактирования
+      function openEditModal(id) {
+        const event = getEventById(id);
+        if (!event) return;
+
+        document.getElementById("editEventId").value = event.id;
+        document.getElementById("editTitle").value = event.title;
+        document.getElementById("editType").value = event.type;
+        document.getElementById("editDate").value = event.date;
+        document.getElementById("editTime").value = event.time;
+        document.getElementById("editDescription").value =
+          event.description || "";
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("editEventModal")
+        );
+        modal.show();
+      }
+
+      // Открытие модального окна для управления посещаемостью
+      function openAttendanceModal(id) {
+        const event = getEventById(id);
+        if (!event) return;
+
+        const members = getAllMembers().filter((member) => member.active);
+        const attendance = getAttendanceByEvent(event.id);
+        const attendedMemberIds = attendance ? attendance.memberIds : [];
+
+        document.getElementById("attendanceEventTitle").textContent =
+          event.title;
+        document.getElementById("attendanceEventDate").textContent = formatDate(
+          event.date + " " + event.time
+        );
+
+        const membersListContainer = document.getElementById(
+          "membersAttendanceList"
+        );
+
+        if (members.length === 0) {
+          membersListContainer.innerHTML =
+            '<div class="alert alert-warning">Нет активных участников для отметки посещаемости.</div>';
+        } else {
+          let html = `<div class="row">`;
+
+          members.forEach((member) => {
+            const isAttended = attendedMemberIds.includes(member.id);
+            html += `
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input member-attendance" type="checkbox" 
+                                    id="member_${member.id}" data-id="${
+              member.id
+            }" ${isAttended ? "checked" : ""}>
+                                <label class="form-check-label" for="member_${
+                                  member.id
+                                }">
+                                    <span class="class-icon class-${member.class.toLowerCase()}"></span>
+                                    ${member.nickname} (${member.class})
+                                </label>
+                            </div>
+                        </div>
+                    `;
+          });
+
+          html += `</div>`;
+          membersListContainer.innerHTML = html;
+        }
+
+        // Сохранение данных о посещаемости
+        document
+          .getElementById("saveAttendance")
+          .setAttribute("data-event-id", event.id);
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("attendanceModal")
+        );
+        modal.show();
+      }
+
+      // Просмотр информации о событии
+      function viewEvent(id) {
+        const event = getEventById(id);
+        if (!event) return;
+
+        // Получение посещаемости
+        const attendance = getAttendanceByEvent(event.id);
+        const attendedMemberIds = attendance ? attendance.memberIds : [];
+
+        // Получение списка участников, которые присутствовали
+        let attendedMembers = "";
+        if (attendedMemberIds.length > 0) {
+          const members = getAllMembers();
+          attendedMembers = attendedMemberIds
+            .map((memberId) => {
+              const member = members.find((m) => m.id === memberId);
+              return member ? member.nickname : "Неизвестный участник";
+            })
+            .join(", ");
+        } else {
+          attendedMembers = "Нет данных о посещаемости";
+        }
+
+        // Форматирование типа события
+        let eventTypeDisplay;
+        switch (event.type) {
+          case "Raid":
+            eventTypeDisplay = "Рейд";
+            break;
+          case "Dungeon":
+            eventTypeDisplay = "Подземелье";
+            break;
+          case "WorldBoss":
+            eventTypeDisplay = "Мировой босс";
+            break;
+          case "GuildWar":
+            eventTypeDisplay = "Война гильдий";
+            break;
+          case "Other":
+            eventTypeDisplay = "Другое";
+            break;
+          default:
+            eventTypeDisplay = event.type;
+        }
+
+        alert(`
+                Информация о событии:
+                
+                Название: ${event.title}
+                Тип: ${eventTypeDisplay}
+                Дата и время: ${formatDate(event.date + " " + event.time)}
+                Описание: ${event.description || "-"}
+                
+                Посещаемость: ${attendedMemberIds.length} участников
+                ${attendedMembers}
+                
+                Дата создания: ${formatDate(event.createdAt)}
+            `);
+      }
+
+      // Инициализация страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        loadEvents();
+
+        // Сохранение нового события
+        document
+          .getElementById("saveNewEvent")
+          .addEventListener("click", function () {
+            const title = document.getElementById("title").value;
+            const type = document.getElementById("type").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+
+            if (!title || !type || !date || !time) {
+              alert("Пожалуйста, заполните обязательные поля");
+              return;
+            }
+
+            const event = {
+              title: title,
+              type: type,
+              date: date,
+              time: time,
+              description: document.getElementById("description").value,
+            };
+
+            saveEvent(event);
+
+            // Скрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("addEventModal")
+            );
+            modal.hide();
+
+            // Очищаем форму
+            document.getElementById("addEventForm").reset();
+
+            // Обновляем список событий
+            loadEvents();
+          });
+
+        // Сохранение изменений события
+        document
+          .getElementById("saveEditEvent")
+          .addEventListener("click", function () {
+            const id = parseInt(document.getElementById("editEventId").value);
+            const title = document.getElementById("editTitle").value;
+            const type = document.getElementById("editType").value;
+            const date = document.getElementById("editDate").value;
+            const time = document.getElementById("editTime").value;
+
+            if (!title || !type || !date || !time) {
+              alert("Пожалуйста, заполните обязательные поля");
+              return;
+            }
+
+            const event = {
+              id: id,
+              title: title,
+              type: type,
+              date: date,
+              time: time,
+              description: document.getElementById("editDescription").value,
+            };
+
+            saveEvent(event);
+
+            // Скрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("editEventModal")
+            );
+            modal.hide();
+
+            // Обновляем список событий
+            loadEvents();
+          });
+
+        // Сохранение данных о посещаемости
+        document
+          .getElementById("saveAttendance")
+          .addEventListener("click", function () {
+            const eventId = parseInt(this.getAttribute("data-event-id"));
+            const checkedMembers = document.querySelectorAll(
+              ".member-attendance:checked"
+            );
+            const memberIds = Array.from(checkedMembers).map((checkbox) =>
+              parseInt(checkbox.getAttribute("data-id"))
+            );
+
+            saveAttendance(eventId, memberIds);
+
+            // Скрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("attendanceModal")
+            );
+            modal.hide();
+
+            // Обновляем список событий
+            loadEvents();
+          });
+      });
+    </script>
+  </body>
+</html>

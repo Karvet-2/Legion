@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Круги гильдии - Legion</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="bg-dark text-white py-3">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="mb-0">
+              <a href="index.html" class="text-white text-decoration-none"
+                >Гильдия Legion</a
+              >
+            </h1>
+          </div>
+          <div class="col-md-6">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index.html">Главная</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="members.html">Участники</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="events.html">События</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="packs.html">Круги</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="statistics.html">Статистика</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" id="logoutBtn">Выход</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div
+              class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+            >
+              <h2 class="mb-0">Круги гильдии</h2>
+              <button
+                class="btn btn-light"
+                data-bs-toggle="modal"
+                data-bs-target="#addPackModal"
+              >
+                Добавить круг
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-12">
+                  <input
+                    type="text"
+                    id="tableFilter"
+                    class="form-control"
+                    placeholder="Поиск по кругам..."
+                  />
+                </div>
+              </div>
+
+              <div id="packsContainer">
+                <div class="alert alert-info">Загрузка данных...</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between">
+                <span>Всего кругов: <strong id="totalPacks">0</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно добавления круга -->
+    <div class="modal fade" id="addPackModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Добавление нового круга</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addPackForm">
+              <div class="mb-3">
+                <label for="name" class="form-label">Название *</label>
+                <input type="text" class="form-control" id="name" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Описание</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="color" class="form-label">Цвет круга</label>
+                <input
+                  type="color"
+                  class="form-control form-control-color"
+                  id="color"
+                  value="#0d6efd"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="saveNewPack">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно редактирования круга -->
+    <div class="modal fade" id="editPackModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Редактирование круга</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editPackForm">
+              <input type="hidden" id="editPackId" />
+              <div class="mb-3">
+                <label for="editName" class="form-label">Название *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editName"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label for="editDescription" class="form-label">Описание</label>
+                <textarea
+                  class="form-control"
+                  id="editDescription"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="editColor" class="form-label">Цвет круга</label>
+                <input
+                  type="color"
+                  class="form-control form-control-color"
+                  id="editColor"
+                  value="#0d6efd"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button type="button" class="btn btn-primary" id="saveEditPack">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно просмотра участников круга -->
+    <div
+      class="modal fade"
+      id="viewPackMembersModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Участники круга</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <h5 id="packTitle" class="mb-3">Загрузка...</h5>
+
+            <div id="packMembersList">
+              <div class="alert alert-info">Загрузка списка участников...</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Гильдия Perfect World Mobile</h5>
+            <p>
+              Сайт для управления гильдией и отслеживания статистики участников.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p>&copy; <span id="currentYear"></span> Все права защищены.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+
+      // Проверка авторизации
+      if (!isLoggedIn()) {
+        window.location.href = "login.html";
+      } else if (!isAdmin()) {
+        // Если пользователь не администратор, перенаправляем на статистику
+        window.location.href = "statistics.html";
+      }
+
+      // Загрузка списка кругов
+      function loadPacks() {
+        const packs = getAllPacks();
+        const container = document.getElementById("packsContainer");
+        const totalPacksElement = document.getElementById("totalPacks");
+
+        totalPacksElement.textContent = packs.length;
+
+        if (packs.length === 0) {
+          container.innerHTML =
+            '<div class="alert alert-info">Круги не найдены. Добавьте первый круг!</div>';
+          return;
+        }
+
+        let html = '<div class="row">';
+
+        packs.forEach((pack) => {
+          // Получение участников круга
+          const members = getMembersByPack(pack.id);
+
+          html += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100" data-pack-name="${pack.name.toLowerCase()}">
+                            <div class="card-header" style="background-color: ${
+                              pack.color || "#0d6efd"
+                            }; color: white;">
+                                <h5 class="card-title mb-0">${pack.name}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">${
+                                  pack.description || "Нет описания"
+                                }</p>
+                                <p><strong>Участников:</strong> ${
+                                  members.length
+                                }</p>
+                            </div>
+                            <div class="card-footer">
+                                <div class="btn-group w-100">
+                                    <button class="btn btn-sm btn-info view-members" data-id="${
+                                      pack.id
+                                    }">Участники</button>
+                                    <button class="btn btn-sm btn-primary edit-pack" data-id="${
+                                      pack.id
+                                    }">Редактировать</button>
+                                    <button class="btn btn-sm btn-danger delete-pack delete-confirm" data-id="${
+                                      pack.id
+                                    }">Удалить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        });
+
+        html += "</div>";
+        container.innerHTML = html;
+
+        // Обработка кнопок действий
+        document.querySelectorAll(".view-members").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            openMembersModal(id);
+          });
+        });
+
+        document.querySelectorAll(".edit-pack").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            openEditModal(id);
+          });
+        });
+
+        document.querySelectorAll(".delete-pack").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const id = parseInt(this.getAttribute("data-id"));
+            const members = getMembersByPack(id);
+
+            let confirmMessage = "Вы уверены, что хотите удалить этот круг?";
+            if (members.length > 0) {
+              confirmMessage += ` В этом круге ${members.length} участников, которые будут перемещены в категорию "Без круга".`;
+            }
+
+            if (confirm(confirmMessage)) {
+              deletePack(id);
+              loadPacks();
+            }
+          });
+        });
+
+        // Фильтрация кругов
+        document
+          .getElementById("tableFilter")
+          .addEventListener("input", function () {
+            const filterText = this.value.toLowerCase();
+            const cards = document.querySelectorAll(".card[data-pack-name]");
+
+            cards.forEach((card) => {
+              const packName = card.getAttribute("data-pack-name");
+              if (packName.includes(filterText)) {
+                card.parentElement.style.display = "";
+              } else {
+                card.parentElement.style.display = "none";
+              }
+            });
+          });
+      }
+
+      // Открытие модального окна для редактирования
+      function openEditModal(id) {
+        const pack = getPackById(id);
+        if (!pack) return;
+
+        document.getElementById("editPackId").value = pack.id;
+        document.getElementById("editName").value = pack.name;
+        document.getElementById("editDescription").value =
+          pack.description || "";
+        document.getElementById("editColor").value = pack.color || "#0d6efd";
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("editPackModal")
+        );
+        modal.show();
+      }
+
+      // Открытие модального окна для просмотра участников круга
+      function openMembersModal(id) {
+        const pack = getPackById(id);
+        if (!pack) return;
+
+        const members = getMembersByPack(id);
+
+        document.getElementById("packTitle").textContent = `Круг: ${pack.name}`;
+
+        const membersListContainer = document.getElementById("packMembersList");
+
+        if (members.length === 0) {
+          membersListContainer.innerHTML =
+            '<div class="alert alert-info">В этом круге нет участников.</div>';
+        } else {
+          let html = `
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ник</th>
+                                    <th>Класс</th>
+                                    <th>Уровень</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+          members.forEach((member, index) => {
+            html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${member.nickname}</td>
+                            <td>
+                                <span class="class-icon class-${member.class.toLowerCase()}"></span>
+                                ${member.class}
+                            </td>
+                            <td>${member.level}</td>
+                            <td>
+                                ${
+                                  member.active
+                                    ? '<span class="badge bg-success">Активен</span>'
+                                    : '<span class="badge bg-danger">Неактивен</span>'
+                                }
+                            </td>
+                        </tr>
+                    `;
+          });
+
+          html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+          membersListContainer.innerHTML = html;
+        }
+
+        const modal = new bootstrap.Modal(
+          document.getElementById("viewPackMembersModal")
+        );
+        modal.show();
+      }
+
+      // Инициализация страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        loadPacks();
+
+        // Сохранение нового круга
+        document
+          .getElementById("saveNewPack")
+          .addEventListener("click", function () {
+            const name = document.getElementById("name").value;
+
+            if (!name) {
+              alert("Пожалуйста, заполните название круга");
+              return;
+            }
+
+            const pack = {
+              name: name,
+              description: document.getElementById("description").value,
+              color: document.getElementById("color").value,
+            };
+
+            savePack(pack);
+
+            // Скрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("addPackModal")
+            );
+            modal.hide();
+
+            // Очищаем форму
+            document.getElementById("addPackForm").reset();
+            document.getElementById("color").value = "#0d6efd";
+
+            // Обновляем список кругов
+            loadPacks();
+          });
+
+        // Сохранение изменений круга
+        document
+          .getElementById("saveEditPack")
+          .addEventListener("click", function () {
+            const id = parseInt(document.getElementById("editPackId").value);
+            const name = document.getElementById("editName").value;
+
+            if (!name) {
+              alert("Пожалуйста, заполните название круга");
+              return;
+            }
+
+            const pack = {
+              id: id,
+              name: name,
+              description: document.getElementById("editDescription").value,
+              color: document.getElementById("editColor").value,
+            };
+
+            savePack(pack);
+
+            // Скрываем модальное окно
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("editPackModal")
+            );
+            modal.hide();
+
+            // Обновляем список кругов
+            loadPacks();
+          });
+      });
+    </script>
+  </body>
+</html>

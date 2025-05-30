@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Экспорт данных в Excel</title>
+  </head>
+  <body>
+    <h1>Генерация Excel-файла...</h1>
+    <p>Если файл не скачался автоматически, нажмите кнопку ниже:</p>
+    <button id="downloadBtn">Скачать Excel-файл</button>
+
+    <script src="js/api.js"></script>
+    <script>
+      // Функция для конвертации данных в CSV формат (Excel-совместимый)
+      function convertToCSV(objArray) {
+        // Получаем заголовки (все возможные ключи из всех объектов)
+        let headers = [];
+        objArray.forEach((obj) => {
+          Object.keys(obj).forEach((key) => {
+            if (headers.indexOf(key) === -1) {
+              headers.push(key);
+            }
+          });
+        });
+
+        // Создаем строку с заголовками
+        let csvStr = headers.join(";") + "\r\n";
+
+        // Добавляем данные
+        objArray.forEach((obj) => {
+          let row = headers.map((header) => {
+            let value = obj[header] === undefined ? "" : obj[header];
+            // Экранируем кавычки и оборачиваем значение в кавычки, если в нем есть точка с запятой
+            value = String(value).replace(/"/g, '""');
+            if (value.indexOf(";") !== -1 || value.indexOf('"') !== -1) {
+              value = '"' + value + '"';
+            }
+            return value;
+          });
+          csvStr += row.join(";") + "\r\n";
+        });
+
+        return csvStr;
+      }
+
+      // Функция для подготовки данных участников
+      function prepareMembersData() {
+        const members = getMembersFromStorage();
+        const packs = getPacksFromStorage();
+
+        return members.map((member) => {
+          const pack = packs.find((p) => p.id === member.packId);
+          const packName = pack ? pack.name : "Нет круга";
+
+          return {
+            Ник: member.nickname,
+            Уровень: "79",
+            Класс: member.class,
+            Пост: member.active ? "Активен" : "Неактивен",
+            БМ: member.battlePower || "0",
+            Круг: packName,
+            Телеграм: member.telegramUsername || "",
+            "Дата регистрации": new Date(member.joinDate).toLocaleDateString(),
+            Заметки: member.notes || "",
+          };
+        });
+      }
+
+      // Функция для создания и скачивания файла
+      function downloadExcelFile() {
+        // Подготовка данных
+        const membersData = prepareMembersData();
+
+        // Конвертация в CSV
+        const csvContent = convertToCSV(membersData);
+
+        // Добавление BOM для корректного отображения кириллицы в Excel
+        const BOM = "\uFEFF";
+        const csvContentWithBOM = BOM + csvContent;
+
+        // Создание blob и ссылки для скачивания
+        const blob = new Blob([csvContentWithBOM], {
+          type: "text/csv;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "legion_members.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // Скачиваем файл при загрузке страницы
+      document.addEventListener("DOMContentLoaded", downloadExcelFile);
+
+      // Обработчик для кнопки
+      document
+        .getElementById("downloadBtn")
+        .addEventListener("click", downloadExcelFile);
+    </script>
+  </body>
+</html>
