@@ -483,8 +483,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="auth.js"></script>
     <script src="api.js"></script>
-    <script src="members.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
+      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
@@ -496,17 +501,62 @@
         window.location.href = "statistics.html";
       }
 
+      // Получить все круги
+      async function getAllPacks() {
+        const { data, error } = await supabase.from("packs").select("*");
+        if (error) {
+          alert("Ошибка загрузки кругов: " + error.message);
+          return [];
+        }
+        return data;
+      }
+
+      // Получить всех участников
+      async function getAllMembers() {
+        const { data, error } = await supabase.from("members").select("*");
+        if (error) {
+          alert("Ошибка загрузки участников: " + error.message);
+          return [];
+        }
+        return data;
+      }
+
+      // Добавить участника
+      async function saveMember(member) {
+        const { data, error } = await supabase.from("members").insert([member]);
+        if (error) {
+          alert("Ошибка добавления участника: " + error.message);
+        }
+        return data;
+      }
+
+      // Обновить участника
+      async function updateMember(id, member) {
+        const { error } = await supabase
+          .from("members")
+          .update(member)
+          .eq("id", id);
+        if (error) {
+          alert("Ошибка обновления: " + error.message);
+        }
+      }
+
+      // Удалить участника
+      async function deleteMember(id) {
+        const { error } = await supabase.from("members").delete().eq("id", id);
+        if (error) {
+          alert("Ошибка удаления: " + error.message);
+        }
+      }
+
       // Загрузка списка кругов
-      function loadPacks() {
-        const packs = getAllPacks();
+      async function loadPacks() {
+        const packs = await getAllPacks();
         const packFilter = document.getElementById("packFilter");
         const packId = document.getElementById("packId");
         const editPackId = document.getElementById("editPackId");
 
-        // Очищаем и заполняем селект фильтра
         packFilter.innerHTML = '<option value="0">Все круги</option>';
-
-        // Очищаем и заполняем селекты выбора круга
         packId.innerHTML = '<option value="0">Без круга</option>';
         editPackId.innerHTML = '<option value="0">Без круга</option>';
 
@@ -529,9 +579,9 @@
       }
 
       // Загрузка списка участников
-      function loadMembers() {
-        const members = getAllMembers();
-        const packs = getAllPacks();
+      async function loadMembers() {
+        const members = await getAllMembers();
+        const packs = await getAllPacks();
         const container = document.getElementById("membersTableContainer");
         const totalMembersElement = document.getElementById("totalMembers");
 
@@ -561,23 +611,24 @@
             `;
 
         members.forEach((member, index) => {
-          // Получение названия круга
           let packName = "Не назначен";
-          const pack = packs.find((p) => p.id === member.packId);
+          const pack = packs.find((p) => p.id === member.pack_id);
           if (pack) {
             packName = pack.name;
           }
 
           html += `
-                    <tr data-pack-id="${member.packId || 0}">
+                    <tr data-pack-id="${member.pack_id || 0}">
                         <td>${index + 1}</td>
-                        <td>${member.nickname}</td>
-                        <td>${member.telegramUsername || "-"}</td>
+                        <td>${member.nickname || "-"}</td>
+                        <td>${member.telegram_username || "-"}</td>
                         <td>
-                            <span class="class-icon class-${member.class.toLowerCase()}"></span>
-                            ${member.class}
+                            <span class="class-icon class-${(
+                              member.class || ""
+                            ).toLowerCase()}"></span>
+                            ${member.class || "-"}
                         </td>
-                        <td>${member.battlePower || 1000}</td>
+                        <td>${member.battle_power || 1000}</td>
                         <td>${packName}</td>
                         <td>
                             ${
@@ -599,110 +650,39 @@
 
         container.innerHTML = html;
 
-        // Обработка кнопок действий
-        document.querySelectorAll(".view-member").forEach((btn) => {
-          btn.addEventListener("click", function () {
-            const id = parseInt(this.getAttribute("data-id"));
-            viewMember(id);
-          });
-        });
-
         document.querySelectorAll(".edit-member").forEach((btn) => {
-          btn.addEventListener("click", function () {
+          btn.addEventListener("click", async function () {
             const id = parseInt(this.getAttribute("data-id"));
-            openEditModal(id);
+            // Здесь можно реализовать открытие модального окна и загрузку данных участника для редактирования
+            // Например: openEditModal(id);
           });
         });
-
         document.querySelectorAll(".delete-member").forEach((btn) => {
-          btn.addEventListener("click", function () {
+          btn.addEventListener("click", async function () {
             const id = parseInt(this.getAttribute("data-id"));
             if (confirm("Вы уверены, что хотите удалить этого участника?")) {
-              deleteMember(id);
-              loadMembers();
+              await deleteMember(id);
+              await loadMembers();
             }
           });
         });
-
-        // Фильтрация по кругам
-        document
-          .getElementById("packFilter")
-          .addEventListener("change", function () {
-            const packId = parseInt(this.value);
-            const rows = document.querySelectorAll(
-              ".filterable-table tbody tr"
-            );
-
-            rows.forEach((row) => {
-              if (
-                packId === 0 ||
-                parseInt(row.getAttribute("data-pack-id")) === packId
-              ) {
-                row.style.display = "";
-              } else {
-                row.style.display = "none";
-              }
-            });
-          });
       }
 
-      // Открытие модального окна для редактирования
-      function openEditModal(id) {
-        const member = getMemberById(id);
-        if (!member) return;
-
-        document.getElementById("editMemberId").value = member.id;
-        document.getElementById("editNickname").value = member.nickname;
-        document.getElementById("editTelegramUsername").value =
-          member.telegramUsername || "";
-        document.getElementById("editClass").value = member.class;
-        document.getElementById("editBattlePower").value =
-          member.battlePower || 1000;
-        document.getElementById("editPackId").value = member.packId || 0;
-        document.getElementById("editNotes").value = member.notes || "";
-        document.getElementById("editActive").checked = member.active;
-
-        const modal = new bootstrap.Modal(
-          document.getElementById("editMemberModal")
-        );
-        modal.show();
-      }
-
-      // Просмотр информации об участнике
-      function viewMember(id) {
-        const member = getMemberById(id);
-        if (!member) return;
-
-        // Найдем круг
-        const packs = getAllPacks();
-        const pack = packs.find((p) => p.id === member.packId);
-        const packName = pack ? pack.name : "Не назначен";
-
-        alert(`
-                Информация о участнике:
-                
-                Ник: ${member.nickname}
-                Ник в Telegram: ${member.telegramUsername || "-"}
-                Класс: ${member.class}
-                БМ: ${member.battlePower || 1000}
-                Круг: ${packName}
-                Заметки: ${member.notes || "-"}
-                
-                Дата создания: ${formatDate(member.createdAt)}
-            `);
-      }
-
-      // Инициализация страницы
       document.addEventListener("DOMContentLoaded", function () {
         loadPacks();
         loadMembers();
 
-        // Сохранение нового участника
         document
           .getElementById("saveMemberBtn")
-          .addEventListener("click", function () {
+          .addEventListener("click", async function () {
             const nickname = document.getElementById("nickname").value;
             const className = document.getElementById("class").value;
+            const battlePower = parseInt(
+              document.getElementById("battlePower").value
+            );
+            const packId = parseInt(document.getElementById("packId").value);
+            const telegramUsername =
+              document.getElementById("telegramUsername").value;
 
             if (!nickname || !className) {
               alert("Пожалуйста, заполните обязательные поля");
@@ -712,39 +692,36 @@
             const member = {
               nickname: nickname,
               class: className,
-              level: parseInt(document.getElementById("level").value),
-              packId: parseInt(document.getElementById("packId").value),
-              notes: document.getElementById("notes").value,
-              telegramUsername:
-                document.getElementById("telegramUsername").value,
-              active: document.getElementById("active").checked,
-              battlePower: parseInt(
-                document.getElementById("battlePower").value
-              ),
+              battle_power: battlePower,
+              pack_id: packId === 0 ? null : packId,
+              telegram_username: telegramUsername,
             };
 
-            saveMember(member);
+            await saveMember(member);
 
-            // Скрываем модальное окно
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("addMemberModal")
             );
             modal.hide();
-
-            // Очищаем форму
             document.getElementById("addMemberForm").reset();
-
-            // Обновляем список участников
-            loadMembers();
+            await loadMembers();
           });
 
-        // Сохранение изменений участника
         document
           .getElementById("updateMemberBtn")
-          .addEventListener("click", function () {
+          .addEventListener("click", async function () {
             const id = parseInt(document.getElementById("editMemberId").value);
             const nickname = document.getElementById("editNickname").value;
             const className = document.getElementById("editClass").value;
+            const battlePower = parseInt(
+              document.getElementById("editBattlePower").value
+            );
+            const packId = parseInt(
+              document.getElementById("editPackId").value
+            );
+            const telegramUsername = document.getElementById(
+              "editTelegramUsername"
+            ).value;
 
             if (!nickname || !className) {
               alert("Пожалуйста, заполните обязательные поля");
@@ -752,30 +729,20 @@
             }
 
             const member = {
-              id: id,
               nickname: nickname,
               class: className,
-              level: parseInt(document.getElementById("editLevel").value),
-              packId: parseInt(document.getElementById("editPackId").value),
-              notes: document.getElementById("editNotes").value,
-              telegramUsername: document.getElementById("editTelegramUsername")
-                .value,
-              active: document.getElementById("editActive").checked,
-              battlePower: parseInt(
-                document.getElementById("editBattlePower").value
-              ),
+              battle_power: battlePower,
+              pack_id: packId === 0 ? null : packId,
+              telegram_username: telegramUsername,
             };
 
-            saveMember(member);
+            await updateMember(id, member);
 
-            // Скрываем модальное окно
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("editMemberModal")
             );
             modal.hide();
-
-            // Обновляем список участников
-            loadMembers();
+            await loadMembers();
           });
       });
     </script>
