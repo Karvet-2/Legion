@@ -631,12 +631,12 @@
                         <td>${member.battle_power || 1000}</td>
                         <td>${packName}</td>
                         <td>
-                            ${
-                              isAdmin()
-                                ? `<button class="btn btn-sm btn-primary edit-member" data-id="${member.id}">Редактировать</button>
-                            <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${member.id}">Удалить</button>`
-                                : ""
-                            }
+                            <button class="btn btn-sm btn-primary edit-member" data-id="${
+                              member.id
+                            }">Редактировать</button>
+                            <button class="btn btn-sm btn-danger delete-member delete-confirm" data-id="${
+                              member.id
+                            }">Удалить</button>
                         </td>
                     </tr>
                 `;
@@ -653,8 +653,27 @@
         document.querySelectorAll(".edit-member").forEach((btn) => {
           btn.addEventListener("click", async function () {
             const id = parseInt(this.getAttribute("data-id"));
-            // Здесь можно реализовать открытие модального окна и загрузку данных участника для редактирования
-            // Например: openEditModal(id);
+            const { data, error } = await supabase
+              .from("members")
+              .select("*")
+              .eq("id", id)
+              .single();
+            if (error || !data) {
+              alert("Ошибка загрузки участника для редактирования");
+              return;
+            }
+            document.getElementById("editMemberId").value = data.id;
+            document.getElementById("editNickname").value = data.nickname || "";
+            document.getElementById("editTelegramUsername").value =
+              data.telegram_username || "";
+            document.getElementById("editClass").value = data.class || "";
+            document.getElementById("editBattlePower").value =
+              data.battle_power || 1000;
+            document.getElementById("editPackId").value = data.pack_id || 0;
+            const modal = new bootstrap.Modal(
+              document.getElementById("editMemberModal")
+            );
+            modal.show();
           });
         });
         document.querySelectorAll(".delete-member").forEach((btn) => {
