@@ -76,33 +76,67 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script>
-      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+      // Конфигурация Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDTtar4GY1kgVSM4pvJtmohK8zWbSAfU9M",
+        authDomain: "legion-1f3a5.firebaseapp.com",
+        projectId: "legion-1f3a5",
+        storageBucket: "legion-1f3a5.firebasestorage.app",
+        messagingSenderId: "925260753671",
+        appId: "1:925260753671:web:0c392cfb7cada1fedcf3a2",
+        measurementId: "G-FBFM45TRQ7",
+      };
+
+      // Инициализация Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // Проверка состояния авторизации
+      auth.onAuthStateChanged(function (user) {
+        if (user) {
+          // Пользователь авторизован
+          window.location.href = "index.html";
+        }
+      });
 
       document
         .getElementById("loginForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
 
-          const username = document.getElementById("username").value;
+          const email = document.getElementById("username").value;
           const password = document.getElementById("password").value;
 
           try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-              email: username,
-              password: password,
-            });
+            const userCredential = await auth.signInWithEmailAndPassword(
+              email,
+              password
+            );
+            const user = userCredential.user;
 
-            if (error) throw error;
+            // Получаем дополнительные данные пользователя из Firestore
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            const userData = userDoc.data();
 
-            // Сохраняем информацию о пользователе
-            localStorage.setItem("user", JSON.stringify(data.user));
+            // Сохраняем данные в localStorage
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                role: userData.role || "user",
+                nickname: userData.nickname,
+              })
+            );
 
-            // Перенаправляем на главную страницу
             window.location.href = "index.html";
           } catch (error) {
             alert("Ошибка входа: " + error.message);

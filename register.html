@@ -135,12 +135,28 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script>
-      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+      // Конфигурация Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDTtar4GY1kgVSM4pvJtmohK8zWbSAfU9M",
+        authDomain: "legion-1f3a5.firebaseapp.com",
+        projectId: "legion-1f3a5",
+        storageBucket: "legion-1f3a5.firebasestorage.app",
+        messagingSenderId: "925260753671",
+        appId: "1:925260753671:web:0c392cfb7cada1fedcf3a2",
+        measurementId: "G-FBFM45TRQ7",
+      };
+
+      // Инициализация Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
 
       document
         .getElementById("registerForm")
@@ -157,30 +173,34 @@
           );
 
           try {
-            // Регистрация пользователя
-            const { data: authData, error: authError } =
-              await supabase.auth.signUp({
-                email: email,
-                password: password,
-              });
+            // Создаем пользователя в Firebase Auth
+            const userCredential = await auth.createUserWithEmailAndPassword(
+              email,
+              password
+            );
+            const user = userCredential.user;
 
-            if (authError) throw authError;
+            // Создаем документ пользователя в Firestore
+            await db.collection("users").doc(user.uid).set({
+              email: email,
+              nickname: nickname,
+              telegram: telegram,
+              class: characterClass,
+              battlePower: battlePower,
+              role: "user",
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
 
-            // Создание профиля участника
-            const { error: profileError } = await supabase
-              .from("members")
-              .insert([
-                {
-                  user_id: authData.user.id,
-                  nickname: nickname,
-                  telegram_username: telegram,
-                  class: characterClass,
-                  battle_power: battlePower,
-                  pack_id: null, // По умолчанию без круга
-                },
-              ]);
-
-            if (profileError) throw profileError;
+            // Создаем запись в коллекции members
+            await db.collection("members").doc(user.uid).set({
+              nickname: nickname,
+              telegram_username: telegram,
+              class: characterClass,
+              battle_power: battlePower,
+              pack_id: null,
+              user_id: user.uid,
+              created_at: firebase.firestore.FieldValue.serverTimestamp(),
+            });
 
             alert("Регистрация успешна! Теперь вы можете войти в систему.");
             window.location.href = "login.html";

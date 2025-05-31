@@ -4,14 +4,20 @@
 
 // Функция проверки авторизации
 function isLoggedIn() {
-    const user = localStorage.getItem('user');
-    return user !== null;
+    return firebase.auth().currentUser !== null;
 }
 
 // Функция проверки прав администратора
-function isAdmin() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user && user.role === 'admin';
+async function isAdmin() {
+    const user = firebase.auth().currentUser;
+    if (!user) return false;
+    
+    const userDoc = await firebase.firestore()
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    
+    return userDoc.exists && userDoc.data().role === 'admin';
 }
 
 // Проверка авторизации (для защиты страниц)
@@ -39,8 +45,10 @@ function login(username, password) {
 
 // Выход из системы
 function logout() {
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    firebase.auth().signOut().then(() => {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    });
 }
 
 // Получение информации о текущем пользователе
@@ -101,4 +109,32 @@ function updateAuthUI() {
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
     updateAuthUI();
+
+    // Проверяем состояние авторизации
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            // Пользователь авторизован
+            firebase.firestore()
+                .collection('users')
+                .doc(user.uid)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        localStorage.setItem('user', JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            role: userData.role || 'user',
+                            nickname: userData.nickname
+                        }));
+                    }
+                });
+        } else {
+            // Пользователь не авторизован
+            if (!window.location.href.includes('login.html') && 
+                !window.location.href.includes('register.html')) {
+                window.location.href = 'login.html';
+            }
+        }
+    });
 }); 
