@@ -24,467 +24,60 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <header class="py-3">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <h1 class="mb-0">
-              <a href="index.html" class="text-white text-decoration-none">
-                <i class="fas fa-dragon me-2"></i>Legion
-              </a>
-            </h1>
+  <body class="bg-light">
+    <div
+      class="container d-flex align-items-center justify-content-center min-vh-100"
+    >
+      <div class="card shadow p-4" style="min-width: 350px">
+        <h2 class="mb-4 text-center">Вход в Legion</h2>
+        <form id="loginForm">
+          <div class="mb-3">
+            <label for="username" class="form-label">Логин</label>
+            <input type="text" class="form-control" id="username" required />
           </div>
-          <div class="col-md-6">
-            <nav class="navbar navbar-expand-lg navbar-dark">
-              <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-              >
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                    <a class="nav-link" href="index.html">
-                      <i class="fas fa-home me-1"></i> Главная
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link active" href="login.html">
-                      <i class="fas fa-sign-in-alt me-1"></i> Вход
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </nav>
+          <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              required
+            />
           </div>
-        </div>
-      </div>
-    </header>
-
-    <div class="container mt-5">
-      <div class="row">
-        <!-- Вкладки для переключения между входом и регистрацией -->
-        <div class="col-md-8 mx-auto mb-4">
-          <ul class="nav nav-pills nav-fill" id="authTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link active"
-                id="login-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#login-content"
-                type="button"
-                role="tab"
-                aria-controls="login-content"
-                aria-selected="true"
-              >
-                <i class="fas fa-sign-in-alt me-2"></i> Вход
-              </button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                id="register-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#register-content"
-                type="button"
-                role="tab"
-                aria-controls="register-content"
-                aria-selected="false"
-              >
-                <i class="fas fa-user-plus me-2"></i> Регистрация
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Контент вкладок -->
-        <div class="tab-content" id="authTabsContent">
-          <!-- Содержимое вкладки входа -->
-          <div
-            class="tab-pane fade show active"
-            id="login-content"
-            role="tabpanel"
-            aria-labelledby="login-tab"
-          >
-            <div class="row justify-content-center">
-              <div class="col-md-6">
-                <div class="card form-container">
-                  <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">
-                      <i class="fas fa-lock me-2"></i> Вход в систему
-                    </h3>
-                  </div>
-                  <div class="card-body">
-                    <div
-                      id="loginError"
-                      class="alert alert-danger"
-                      style="display: none"
-                    ></div>
-
-                    <form id="loginForm" class="mt-4">
-                      <div class="mb-4">
-                        <label for="username" class="form-label">
-                          <i class="fas fa-user me-2"></i>Имя пользователя
-                        </label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="username"
-                          required
-                          placeholder="Введите имя пользователя"
-                        />
-                      </div>
-                      <div class="mb-4">
-                        <label for="password" class="form-label">
-                          <i class="fas fa-key me-2"></i>Пароль
-                        </label>
-                        <input
-                          type="password"
-                          class="form-control"
-                          id="password"
-                          required
-                          placeholder="Введите пароль"
-                        />
-                      </div>
-                      <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                          <i class="fas fa-sign-in-alt me-2"></i> Войти
-                        </button>
-                      </div>
-                    </form>
-
-                    <div class="mt-4">
-                      <div class="alert alert-info">
-                        <div class="d-flex align-items-center mb-2">
-                          <i class="fas fa-info-circle me-2 fs-4"></i>
-                          <h5 class="mb-0">Данные для входа:</h5>
-                        </div>
-                        <ul class="list-unstyled mb-2 ms-4">
-                          <li class="mb-2">
-                            <i class="fas fa-user-shield me-2"></i>
-                            <strong>Администратор:</strong> admin / admin123
-                          </li>
-                          <li>
-                            <i class="fas fa-user me-2"></i>
-                            <strong>Пользователь:</strong> user / user123
-                          </li>
-                        </ul>
-                        <div class="d-grid mt-3">
-                          <button id="resetData" class="btn btn-warning">
-                            <i class="fas fa-redo-alt me-2"></i> Сбросить данные
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Содержимое вкладки регистрации -->
-          <div
-            class="tab-pane fade"
-            id="register-content"
-            role="tabpanel"
-            aria-labelledby="register-tab"
-          >
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="card form-container">
-                  <div class="card-header bg-secondary text-white">
-                    <h3 class="mb-0">
-                      <i class="fas fa-user-plus me-2"></i> Регистрация нового
-                      участника
-                    </h3>
-                  </div>
-                  <div class="card-body">
-                    <div
-                      id="registerError"
-                      class="alert alert-danger"
-                      style="display: none"
-                    ></div>
-                    <div
-                      id="registerSuccess"
-                      class="alert alert-success"
-                      style="display: none"
-                    ></div>
-
-                    <form id="registerForm" class="mt-4">
-                      <div class="row">
-                        <div class="col-md-6 mb-4">
-                          <label for="registerUsername" class="form-label">
-                            <i class="fas fa-user me-2"></i>Имя пользователя *
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="registerUsername"
-                            required
-                            placeholder="Логин для входа в систему"
-                          />
-                        </div>
-                        <div class="col-md-6 mb-4">
-                          <label for="registerPassword" class="form-label">
-                            <i class="fas fa-key me-2"></i>Пароль *
-                          </label>
-                          <input
-                            type="password"
-                            class="form-control"
-                            id="registerPassword"
-                            required
-                            placeholder="Придумайте пароль"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6 mb-4">
-                          <label for="registerNickname" class="form-label">
-                            <i class="fas fa-gamepad me-2"></i>Имя в игре *
-                          </label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            id="registerNickname"
-                            required
-                            placeholder="Ваш ник в игре"
-                          />
-                        </div>
-                        <div class="col-md-6 mb-4">
-                          <label for="registerTelegram" class="form-label">
-                            <i class="fab fa-telegram me-2"></i>Ник в Telegram *
-                          </label>
-                          <div class="input-group">
-                            <span class="input-group-text">@</span>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="registerTelegram"
-                              required
-                              placeholder="username"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6 mb-4">
-                          <label for="registerClass" class="form-label">
-                            <i class="fas fa-hat-wizard me-2"></i>Класс *
-                          </label>
-                          <select
-                            class="form-select"
-                            id="registerClass"
-                            required
-                          >
-                            <option value="">Выберите класс</option>
-                            <option value="Страж">Страж</option>
-                            <option value="Друид">Друид</option>
-                            <option value="Жнец">Жнец</option>
-                            <option value="Стрелок">Стрелок</option>
-                            <option value="Жрец">Жрец</option>
-                            <option value="Лучник">Лучник</option>
-                            <option value="Оккультист">Оккультист</option>
-                            <option value="Маг">Маг</option>
-                            <option value="Воин">Воин</option>
-                            <option value="Чародей">Чародей</option>
-                            <option value="Призрак">Призрак</option>
-                            <option value="Убийца">Убийца</option>
-                            <option value="Оборотень">Оборотень</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                          <label for="registerBattlePower" class="form-label">
-                            <i class="fas fa-fist-raised me-2"></i>Боевая мощь *
-                          </label>
-                          <input
-                            type="number"
-                            class="form-control"
-                            id="registerBattlePower"
-                            required
-                            min="1"
-                            value="1000"
-                            placeholder="Ваша боевая мощь"
-                          />
-                        </div>
-                      </div>
-
-                      <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-secondary btn-lg">
-                          <i class="fas fa-user-plus me-2"></i>
-                          Зарегистрироваться
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          <button type="submit" class="btn btn-primary w-100">Войти</button>
+        </form>
+        <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
       </div>
     </div>
-
-    <footer class="py-4 mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h5><i class="fas fa-dragon me-2"></i> Гильдия Legion</h5>
-            <p>
-              Сайт для управления гильдией и отслеживания статистики участников.
-            </p>
-          </div>
-          <div class="col-md-6 text-md-end">
-            <div class="social-icons mb-3">
-              <a href="#" class="text-light me-3"
-                ><i class="fab fa-discord fa-lg"></i
-              ></a>
-              <a href="#" class="text-light me-3"
-                ><i class="fab fa-telegram fa-lg"></i
-              ></a>
-              <a href="#" class="text-light"><i class="fab fa-vk fa-lg"></i></a>
-            </div>
-            <p>&copy; <span id="currentYear"></span> Все права защищены.</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="auth.js"></script>
-    <script src="api.js"></script>
     <script>
-      document.getElementById("currentYear").textContent =
-        new Date().getFullYear();
-
-      // Сброс данных LocalStorage
-      document
-        .getElementById("resetData")
-        .addEventListener("click", function () {
-          localStorage.clear();
-          initializeLocalStorage();
-          alert(
-            "Данные сброшены. Теперь вы можете войти с учетными данными по умолчанию."
-          );
-        });
-
-      // Обработка формы входа
+      const sheetdbApiUrl = "https://sheetdb.io/api/v1/rjbrb6d41t0qw";
+      async function getAllUsers() {
+        const res = await fetch(`${sheetdbApiUrl}?sheet=users`);
+        return await res.json();
+      }
+      async function loginUser(username, password) {
+        const users = await getAllUsers();
+        const user = users.find(
+          (u) => u.username === username && u.password === password
+        );
+        if (user) {
+          localStorage.setItem("userId", user.id);
+          localStorage.setItem("username", user.username);
+          localStorage.setItem("role", user.role);
+          window.location.href = "members.html";
+        } else {
+          document.getElementById("loginError").textContent =
+            "Неверный логин или пароль";
+          document.getElementById("loginError").classList.remove("d-none");
+        }
+      }
       document
         .getElementById("loginForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
-
           const username = document.getElementById("username").value;
           const password = document.getElementById("password").value;
-
-          if (login(username, password)) {
-            window.location.href = "index.html";
-          } else {
-            const errorElement = document.getElementById("loginError");
-            errorElement.textContent = "Неверное имя пользователя или пароль";
-            errorElement.style.display = "block";
-          }
-        });
-
-      // Обработка формы регистрации
-      document
-        .getElementById("registerForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-
-          // Получение данных из формы
-          const username = document.getElementById("registerUsername").value;
-          const password = document.getElementById("registerPassword").value;
-          const nickname = document.getElementById("registerNickname").value;
-          const telegramUsername =
-            document.getElementById("registerTelegram").value;
-          const characterClass = document.getElementById("registerClass").value;
-          const battlePower = parseInt(
-            document.getElementById("registerBattlePower").value
-          );
-
-          // Проверка обязательных полей
-          if (
-            !username ||
-            !password ||
-            !nickname ||
-            !telegramUsername ||
-            !characterClass ||
-            !battlePower
-          ) {
-            const errorElement = document.getElementById("registerError");
-            errorElement.textContent =
-              "Пожалуйста, заполните все обязательные поля";
-            errorElement.style.display = "block";
-            return;
-          }
-
-          // Получение текущих пользователей и проверка уникальности имени
-          const users = getUsersFromStorage();
-          if (users.some((u) => u.username === username)) {
-            const errorElement = document.getElementById("registerError");
-            errorElement.textContent =
-              "Пользователь с таким именем уже существует";
-            errorElement.style.display = "block";
-            return;
-          }
-
-          // Создание нового пользователя
-          const newUserId =
-            users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-          const newUser = {
-            id: newUserId,
-            username: username,
-            password: password,
-            role: "user",
-          };
-
-          // Сохранение пользователя
-          users.push(newUser);
-          saveUsersToStorage(users);
-
-          // Создание профиля участника гильдии
-          const members = getMembersFromStorage();
-          const newMemberId =
-            members.length > 0 ? Math.max(...members.map((m) => m.id)) + 1 : 1;
-
-          const newMember = {
-            id: newMemberId,
-            userId: newUserId,
-            nickname: nickname,
-            telegramUsername: telegramUsername,
-            class: characterClass,
-            battlePower: battlePower,
-            packId: 3, // По умолчанию новички
-            active: true,
-            joinDate: new Date().toISOString(),
-          };
-
-          // Сохранение участника
-          members.push(newMember);
-          saveMembersToStorage(members);
-
-          // Отображение успешного сообщения
-          const errorElement = document.getElementById("registerError");
-          errorElement.style.display = "none";
-
-          const successElement = document.getElementById("registerSuccess");
-          successElement.textContent =
-            "Регистрация успешно завершена! Теперь вы можете войти в систему.";
-          successElement.style.display = "block";
-
-          // Очистка формы
-          document.getElementById("registerForm").reset();
-
-          // Переключение на вкладку входа через 2 секунды
-          setTimeout(() => {
-            document.getElementById("login-tab").click();
-          }, 2000);
+          loginUser(username, password);
         });
     </script>
   </body>

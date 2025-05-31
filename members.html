@@ -481,82 +481,47 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-      // Инициализация Supabase для браузера через CDN
-      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
-      const supabaseClient = window.supabase.createClient(
-        supabaseUrl,
-        supabaseKey
-      );
+      const sheetdbApiUrl = "https://sheetdb.io/api/v1/rjbrb6d41t0qw";
+
+      async function getAllUsers() {
+        const res = await fetch(`${sheetdbApiUrl}?sheet=users`);
+        return await res.json();
+      }
+
+      async function checkAuth() {
+        const userId = localStorage.getItem("userId");
+        const username = localStorage.getItem("username");
+        const role = localStorage.getItem("role");
+        if (!userId || !username || !role) {
+          window.location.href = "login.html";
+          return false;
+        }
+        const users = await getAllUsers();
+        const user = users.find(
+          (u) => u.id === userId && u.username === username && u.role === role
+        );
+        if (!user) {
+          localStorage.clear();
+          window.location.href = "login.html";
+          return false;
+        }
+        return true;
+      }
 
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
-      // Проверка авторизации через Supabase Auth
-      async function checkAuth() {
-        try {
-          const {
-            data: { user },
-            error: authError,
-          } = await supabaseClient.auth.getUser();
-          if (authError) {
-            console.error("Ошибка авторизации:", authError);
-            window.location.href = "login.html";
-            return false;
-          }
-          if (!user) {
-            console.log("Пользователь не авторизован");
-            window.location.href = "login.html";
-            return false;
-          }
-          const { data, error } = await supabaseClient
-            .from("users")
-            .select("role")
-            .eq("id", user.id)
-            .single();
-          if (error) {
-            console.error("Ошибка получения роли пользователя:", error);
-            window.location.href = "login.html";
-            return false;
-          }
-          if (!data) {
-            console.log("Пользователь не найден в базе");
-            window.location.href = "login.html";
-            return false;
-          }
-          if (data.role !== "admin") {
-            console.log("Недостаточно прав");
-            window.location.href = "statistics.html";
-            return false;
-          }
-          console.log("Авторизация успешна");
-          return true;
-        } catch (err) {
-          console.error("Неожиданная ошибка при проверке авторизации:", err);
-          window.location.href = "login.html";
-          return false;
-        }
-      }
-
       // Получить все круги
       async function getAllPacks() {
         try {
-          const { data, error } = await supabaseClient
-            .from("packs")
-            .select("*");
-          if (error) {
-            console.error("Ошибка загрузки кругов:", error);
-            alert("Ошибка загрузки кругов: " + error.message);
-            return [];
-          }
+          const res = await fetch(`${sheetdbApiUrl}?sheet=packs`);
+          const data = await res.json();
           console.log("Загружены круги:", data);
           return data;
         } catch (err) {
-          console.error("Неожиданная ошибка при загрузке кругов:", err);
-          alert("Произошла ошибка при загрузке кругов");
+          console.error("Ошибка загрузки кругов:", err);
+          alert("Ошибка загрузки кругов");
           return [];
         }
       }
@@ -564,19 +529,13 @@
       // Получить всех участников
       async function getAllMembers() {
         try {
-          const { data, error } = await supabaseClient
-            .from("members")
-            .select("*");
-          if (error) {
-            console.error("Ошибка загрузки участников:", error);
-            alert("Ошибка загрузки участников: " + error.message);
-            return [];
-          }
+          const res = await fetch(`${sheetdbApiUrl}?sheet=members`);
+          const data = await res.json();
           console.log("Загружены участники:", data);
           return data;
         } catch (err) {
-          console.error("Неожиданная ошибка при загрузке участников:", err);
-          alert("Произошла ошибка при загрузке участников");
+          console.error("Ошибка загрузки участников:", err);
+          alert("Ошибка загрузки участников");
           return [];
         }
       }
@@ -584,19 +543,17 @@
       // Добавить участника
       async function saveMember(member) {
         try {
-          const { data, error } = await supabaseClient
-            .from("members")
-            .insert([member]);
-          if (error) {
-            console.error("Ошибка добавления участника:", error);
-            alert("Ошибка добавления участника: " + error.message);
-            return null;
-          }
+          const res = await fetch(`${sheetdbApiUrl}?sheet=members`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: [member] }),
+          });
+          const data = await res.json();
           console.log("Участник добавлен:", data);
           return data;
         } catch (err) {
-          console.error("Неожиданная ошибка при добавлении участника:", err);
-          alert("Произошла ошибка при добавлении участника");
+          console.error("Ошибка добавления участника:", err);
+          alert("Ошибка добавления участника");
           return null;
         }
       }
@@ -604,20 +561,17 @@
       // Обновить участника
       async function updateMember(id, member) {
         try {
-          const { data, error } = await supabaseClient
-            .from("members")
-            .update(member)
-            .eq("id", id);
-          if (error) {
-            console.error("Ошибка обновления участника:", error);
-            alert("Ошибка обновления: " + error.message);
-            return false;
-          }
+          const res = await fetch(`${sheetdbApiUrl}/id/${id}?sheet=members`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: member }),
+          });
+          const data = await res.json();
           console.log("Участник обновлен:", data);
           return true;
         } catch (err) {
-          console.error("Неожиданная ошибка при обновлении участника:", err);
-          alert("Произошла ошибка при обновлении участника");
+          console.error("Ошибка обновления участника:", err);
+          alert("Ошибка обновления участника");
           return false;
         }
       }
@@ -625,20 +579,15 @@
       // Удалить участника
       async function deleteMember(id) {
         try {
-          const { data, error } = await supabaseClient
-            .from("members")
-            .delete()
-            .eq("id", id);
-          if (error) {
-            console.error("Ошибка удаления участника:", error);
-            alert("Ошибка удаления: " + error.message);
-            return false;
-          }
+          const res = await fetch(`${sheetdbApiUrl}/id/${id}?sheet=members`, {
+            method: "DELETE",
+          });
+          const data = await res.json();
           console.log("Участник удален:", data);
           return true;
         } catch (err) {
-          console.error("Неожиданная ошибка при удалении участника:", err);
-          alert("Произошла ошибка при удалении участника");
+          console.error("Ошибка удаления участника:", err);
+          alert("Ошибка удаления участника");
           return false;
         }
       }
@@ -646,19 +595,17 @@
       // Добавить круг
       async function savePack(pack) {
         try {
-          const { data, error } = await supabaseClient
-            .from("packs")
-            .insert([pack]);
-          if (error) {
-            console.error("Ошибка добавления круга:", error);
-            alert("Ошибка добавления круга: " + error.message);
-            return null;
-          }
+          const res = await fetch(`${sheetdbApiUrl}?sheet=packs`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: [pack] }),
+          });
+          const data = await res.json();
           console.log("Круг добавлен:", data);
           return data;
         } catch (err) {
-          console.error("Неожиданная ошибка при добавлении круга:", err);
-          alert("Произошла ошибка при добавлении круга");
+          console.error("Ошибка добавления круга:", err);
+          alert("Ошибка добавления круга");
           return null;
         }
       }
@@ -666,20 +613,17 @@
       // Обновить круг
       async function updatePack(id, pack) {
         try {
-          const { data, error } = await supabaseClient
-            .from("packs")
-            .update(pack)
-            .eq("id", id);
-          if (error) {
-            console.error("Ошибка обновления круга:", error);
-            alert("Ошибка обновления круга: " + error.message);
-            return false;
-          }
+          const res = await fetch(`${sheetdbApiUrl}/id/${id}?sheet=packs`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: pack }),
+          });
+          const data = await res.json();
           console.log("Круг обновлен:", data);
           return true;
         } catch (err) {
-          console.error("Неожиданная ошибка при обновлении круга:", err);
-          alert("Произошла ошибка при обновлении круга");
+          console.error("Ошибка обновления круга:", err);
+          alert("Ошибка обновления круга");
           return false;
         }
       }
@@ -687,20 +631,15 @@
       // Удалить круг
       async function deletePack(id) {
         try {
-          const { data, error } = await supabaseClient
-            .from("packs")
-            .delete()
-            .eq("id", id);
-          if (error) {
-            console.error("Ошибка удаления круга:", error);
-            alert("Ошибка удаления круга: " + error.message);
-            return false;
-          }
+          const res = await fetch(`${sheetdbApiUrl}/id/${id}?sheet=packs`, {
+            method: "DELETE",
+          });
+          const data = await res.json();
           console.log("Круг удален:", data);
           return true;
         } catch (err) {
-          console.error("Неожиданная ошибка при удалении круга:", err);
-          alert("Произошла ошибка при удалении круга");
+          console.error("Ошибка удаления круга:", err);
+          alert("Ошибка удаления круга");
           return false;
         }
       }
@@ -862,13 +801,20 @@
               battle_power: battlePower,
               pack_id: packId === 0 ? null : packId,
               telegram_username: telegramUsername,
-            }; 
+            };
             await updateMember(id, member);
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("editMemberModal")
             );
             modal.hide();
             await loadMembers();
+          });
+        // Logout handler
+        document
+          .getElementById("logoutBtn")
+          .addEventListener("click", function () {
+            localStorage.clear();
+            window.location.href = "login.html";
           });
       });
     </script>
