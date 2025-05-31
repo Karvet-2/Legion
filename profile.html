@@ -90,7 +90,7 @@
                     >
                       <i class="fas fa-user-circle me-1"></i>
                       <img
-                        src="path/to/default-avatar.png"
+                        src="Avatar.png"
                         alt="Аватар пользователя"
                         class="user-avatar me-1"
                         id="userPhoto"
@@ -271,10 +271,10 @@
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         // Проверка авторизации на странице профиля
-        if (!firebase.auth().currentUser) {
-          window.location.href = "login.html";
-          return;
-        }
+        // if (!firebase.auth().currentUser) {
+        //     window.location.href = "login.html"; // Если не авторизован, перенаправляем на вход
+        //     return;
+        // }
 
         const user = firebase.auth().currentUser;
 
