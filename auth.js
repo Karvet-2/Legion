@@ -67,7 +67,7 @@ function getCurrentMember() {
 }
 
 // Обновление интерфейса в зависимости от статуса авторизации
-function updateAuthUI() {
+async function updateAuthUI() {
     const user = firebase.auth().currentUser;
     const loggedIn = user !== null;
     let isAdminUser = false;
