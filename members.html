@@ -862,7 +862,7 @@
               battle_power: battlePower,
               pack_id: packId === 0 ? null : packId,
               telegram_username: telegramUsername,
-            };
+            }; 
             await updateMember(id, member);
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("editMemberModal")
