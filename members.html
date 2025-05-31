@@ -492,14 +492,13 @@
       async function checkAuth() {
         const userId = localStorage.getItem("userId");
         const username = localStorage.getItem("username");
-        const role = localStorage.getItem("role");
-        if (!userId || !username || !role) {
+        if (!userId || !username) {
           window.location.href = "login.html";
           return false;
         }
         const users = await getAllUsers();
         const user = users.find(
-          (u) => u.id === userId && u.username === username && u.role === role
+          (u) => u.id === userId && u.username === username
         );
         if (!user) {
           localStorage.clear();
@@ -820,4 +819,3 @@
     </script>
   </body>
 </html>
-

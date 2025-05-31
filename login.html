@@ -57,13 +57,18 @@
       }
       async function loginUser(username, password) {
         const users = await getAllUsers();
+        if (!Array.isArray(users)) {
+          document.getElementById("loginError").textContent =
+            "Ошибка связи с базой данных. Попробуйте позже.";
+          document.getElementById("loginError").classList.remove("d-none");
+          return;
+        }
         const user = users.find(
           (u) => u.username === username && u.password === password
         );
         if (user) {
           localStorage.setItem("userId", user.id);
           localStorage.setItem("username", user.username);
-          localStorage.setItem("role", user.role);
           window.location.href = "members.html";
         } else {
           document.getElementById("loginError").textContent =
