@@ -74,7 +74,9 @@ async function updateAuthUI() {
     let userNickname = 'Гость';
 
     if (loggedIn) {
+        console.log("User is logged in. Trying to fetch user data."); // Отладочный вывод перед try
         try {
+            console.log("Fetching user document..."); // Отладочный вывод перед await
             const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
             if (userDoc.exists) {
                 const userData = userDoc.data();
@@ -159,8 +161,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = 'login.html';
             } else {
                  // Пользователь не авторизован и находится на странице входа или регистрации - остаемся
-                 updateAuthUI(); // Обновляем UI даже если пользователь не авторизован (скрыть защищенные элементы)
+                 // updateAuthUI(); // Пока отключим здесь, чтобы не было лишних вызовов до определения состояния
             }
+        }
+        
+        // Вызываем updateAuthUI после определения состояния авторизации, независимо от страницы
+        // Но только если Firebase уже проинициализирован (что должно быть так)
+        if (typeof firebase !== 'undefined' && firebase.auth().currentUser !== undefined) {
+             updateAuthUI();
         }
     });
     
