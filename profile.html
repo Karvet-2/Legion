@@ -83,8 +83,25 @@
                   </li>
 
                   <li class="nav-item logged-in-only" style="display: none">
-                    <a class="nav-link active" href="profile.html">
-                      <i class="fas fa-user-circle me-1"></i> Профиль
+                    <a
+                      class="nav-link active"
+                      href="profile.html"
+                      id="userProfileLink"
+                    >
+                      <i class="fas fa-user-circle me-1"></i>
+                      <img
+                        src="path/to/default-avatar.png"
+                        alt="Аватар пользователя"
+                        class="user-avatar me-1"
+                        id="userPhoto"
+                        style="
+                          width: 30px;
+                          height: 30px;
+                          border-radius: 50%;
+                          vertical-align: middle;
+                        "
+                      />
+                      <strong id="currentUserDisplay"></strong>
                     </a>
                   </li>
 

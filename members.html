@@ -96,7 +96,7 @@
                 <i class="fas fa-users me-2"></i> Участники гильдии
               </h2>
               <button
-                class="btn btn-light"
+                class="btn btn-light admin-only"
                 data-bs-toggle="modal"
                 data-bs-target="#addMemberModal"
               >
@@ -487,18 +487,16 @@
     <script>
       const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
       const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
       const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
-      // Проверка авторизации
+      // Проверка авторизации (только проверка, без перенаправления админов)
       if (!isLoggedIn()) {
         window.location.href = "login.html";
-      } else if (!isAdmin()) {
-        // Если пользователь не администратор, перенаправляем на статистику
-        window.location.href = "statistics.html";
+        return;
       }
 
       // Получить все круги

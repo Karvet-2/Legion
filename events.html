@@ -68,7 +68,7 @@
             >
               <h2 class="mb-0">События гильдии</h2>
               <button
-                class="btn btn-light"
+                class="btn btn-light admin-only"
                 data-bs-toggle="modal"
                 data-bs-target="#addEventModal"
               >
@@ -337,12 +337,10 @@
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
 
-      // Проверка авторизации
+      // Проверка авторизации (только проверка, без перенаправления админов)
       if (!isLoggedIn()) {
         window.location.href = "login.html";
-      } else if (!isAdmin()) {
-        // Если пользователь не администратор, перенаправляем на статистику
-        window.location.href = "statistics.html";
+        return;
       }
 
       // Загрузка списка событий

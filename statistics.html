@@ -383,6 +383,7 @@
       // Проверка авторизации
       if (!isLoggedIn()) {
         window.location.href = "login.html";
+        return;
       }
 
       // Загрузка общей статистики

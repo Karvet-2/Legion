@@ -82,14 +82,25 @@
                     </a>
                   </li>
                   <li class="nav-item logged-in-only" style="display: none">
-                    <a class="nav-link" href="#" id="logoutBtn">
-                      <i class="fas fa-sign-out-alt me-1"></i> Выход
+                    <a
+                      class="nav-link"
+                      href="profile.html"
+                      id="userProfileLink"
+                    >
+                      <img
+                        src="path/to/default-avatar.png"
+                        alt="Аватар пользователя"
+                        class="user-avatar me-1"
+                        id="userPhoto"
+                        style="
+                          width: 30px;
+                          height: 30px;
+                          border-radius: 50%;
+                          vertical-align: middle;
+                        "
+                      />
+                      <strong id="currentUserDisplay"></strong>
                     </a>
-                  </li>
-                  <li class="nav-item logged-in-only" style="display: none">
-                    <span class="nav-link"
-                      ><strong id="currentUserDisplay"></strong
-                    ></span>
                   </li>
                   <li class="nav-item logged-out-only">
                     <a class="nav-link" href="login.html">

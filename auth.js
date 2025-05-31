@@ -72,6 +72,7 @@ async function updateAuthUI() {
     const loggedIn = user !== null;
     let isAdminUser = false;
     let userNickname = 'Гость';
+    let userPhotoURL = 'path/to/default-avatar.png'; // Путь к аватару по умолчанию
 
     if (loggedIn) {
         console.log("User is logged in. Trying to fetch user data."); // Отладочный вывод перед try
@@ -82,6 +83,7 @@ async function updateAuthUI() {
                 const userData = userDoc.data();
                 isAdminUser = userData.role === 'admin';
                 userNickname = userData.nickname || user.email; // Используем ник или email
+                userPhotoURL = userData.photoURL || userPhotoURL; // Используем photoURL из Firestore или дефолтный
                  localStorage.setItem('user', JSON.stringify({...userData, uid: user.uid})); // Обновляем localStorage с полными данными
             }
         } catch (error) {
@@ -107,6 +109,12 @@ async function updateAuthUI() {
     const userDisplayElem = document.getElementById('currentUserDisplay');
     if (userDisplayElem) {
         userDisplayElem.textContent = userNickname;
+    }
+
+    // Отображение аватара пользователя
+    const userPhotoElem = document.getElementById('userPhoto');
+    if (userPhotoElem) {
+        userPhotoElem.src = userPhotoURL;
     }
 }
 
