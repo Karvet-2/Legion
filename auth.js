@@ -112,27 +112,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Проверяем состояние авторизации
     firebase.auth().onAuthStateChanged(function(user) {
+        const currentPage = window.location.pathname.split('/').pop();
+        
         if (user) {
             // Пользователь авторизован
-            firebase.firestore()
-                .collection('users')
-                .doc(user.uid)
-                .get()
-                .then((doc) => {
-                    if (doc.exists) {
-                        const userData = doc.data();
-                        localStorage.setItem('user', JSON.stringify({
-                            uid: user.uid,
-                            email: user.email,
-                            role: userData.role || 'user',
-                            nickname: userData.nickname
-                        }));
-                    }
-                });
+            // Перенаправляем на главную, только если не на страницах входа/регистрации
+            if (currentPage !== 'login.html' && currentPage !== 'register.html') {
+                firebase.firestore()
+                    .collection('users')
+                    .doc(user.uid)
+                    .get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            localStorage.setItem('user', JSON.stringify({
+                                uid: user.uid,
+                                email: user.email,
+                                role: userData.role || 'user',
+                                nickname: userData.nickname
+                            }));
+                        }
+                        // Перенаправляем только после получения данных пользователя
+                        window.location.href = 'index.html';
+                    }).catch(error => {
+                        console.error("Error fetching user data:", error);
+                        // Если не удалось получить данные пользователя, возможно, стоит выйти
+                        logout();
+                    });
+            } else {
+                // Если пользователь авторизован, но находится на странице входа/регистрации, остаемся там
+                // (Это нужно, если мы хотим позволить авторизованным пользователям видеть эти страницы)
+                // Если нужно сразу перенаправлять на главную, можно убрать этот else
+            }
         } else {
             // Пользователь не авторизован
-            if (!window.location.href.includes('login.html') && 
-                !window.location.href.includes('register.html')) {
+            // Перенаправляем на страницу входа, только если не на страницах входа/регистрации
+            if (currentPage !== 'login.html' && currentPage !== 'register.html') {
                 window.location.href = 'login.html';
             }
         }
