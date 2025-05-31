@@ -302,28 +302,28 @@ header h1 a:hover {
 
 .form-control {
   border-radius: var(--border-radius);
-  padding: 0.75rem 1rem;
-  border: 1px solid #e0e0e0;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
 }
 
 .form-control:focus {
   border-color: var(--primary-light);
   box-shadow: 0 0 0 0.25rem rgba(126, 87, 194, 0.25);
+  outline: none;
 }
 
 /* Activity Stream */
 .activity-stream {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
 }
 
 .activity-item {
-  padding: 15px 20px;
-  border-left: 4px solid var(--primary);
-  background-color: white;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
 }
 
 /* Footer */
@@ -461,4 +461,19 @@ footer h5 {
   background-image: none;
   border-color: var(--success);
   box-shadow: 0 0 0 0.25rem rgba(102, 187, 106, 0.25);
+}
+
+/* Dark theme adjustments for forms */
+body.bg-dark .form-label {
+  color: var(--text-light); /* Light color for labels on dark background */
+}
+
+body.bg-dark .form-control {
+  background-color: var(--dark); /* Use dark background color variable */
+  color: var(--text-light); /* Light color for text in inputs */
+  border-color: #454d55; /* Slightly lighter border for contrast */
+}
+
+body.bg-dark .form-control::placeholder {
+  color: var(--gray); /* Use gray color variable for placeholder */
 } 

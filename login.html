@@ -99,14 +99,6 @@
       const auth = firebase.auth();
       const db = firebase.firestore();
 
-      // Проверка состояния авторизации
-      auth.onAuthStateChanged(function (user) {
-        if (user) {
-          // Пользователь авторизован
-          window.location.href = "index.html";
-        }
-      });
-
       document
         .getElementById("loginForm")
         .addEventListener("submit", async function (e) {
