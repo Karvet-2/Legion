@@ -68,8 +68,24 @@ function getCurrentMember() {
 
 // Обновление интерфейса в зависимости от статуса авторизации
 function updateAuthUI() {
-    const loggedIn = isLoggedIn();
-    const admin = isAdmin();
+    const user = firebase.auth().currentUser;
+    const loggedIn = user !== null;
+    let isAdminUser = false;
+    let userNickname = 'Гость';
+
+    if (loggedIn) {
+        try {
+            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                isAdminUser = userData.role === 'admin';
+                userNickname = userData.nickname || user.email; // Используем ник или email
+                 localStorage.setItem('user', JSON.stringify({...userData, uid: user.uid})); // Обновляем localStorage с полными данными
+            }
+        } catch (error) {
+            console.error("Error fetching user data for UI update:", error);
+        }
+    }
     
     // Отображение/скрытие элементов в зависимости от статуса авторизации
     document.querySelectorAll('.logged-in-only').forEach(el => {
@@ -82,36 +98,23 @@ function updateAuthUI() {
     
     // Отображение/скрытие элементов в зависимости от уровня доступа
     document.querySelectorAll('.admin-only').forEach(el => {
-        el.style.display = (loggedIn && admin) ? '' : 'none';
+        el.style.display = (loggedIn && isAdminUser) ? '' : 'none';
     });
     
-    // Если пользователь авторизован, добавляем обработчик для кнопки выхода
-    if (loggedIn) {
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
-        }
-        
-        // Отображение имени пользователя, если есть соответствующий элемент
-        const currentUser = getCurrentUser();
-        const currentMember = getCurrentMember();
-        
-        const userDisplayElem = document.getElementById('currentUserDisplay');
-        if (userDisplayElem && currentMember) {
-            userDisplayElem.textContent = currentMember.nickname;
-        }
+    // Отображение ника пользователя
+    const userDisplayElem = document.getElementById('currentUserDisplay');
+    if (userDisplayElem) {
+        userDisplayElem.textContent = userNickname;
     }
 }
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    // updateAuthUI(); // Пока отключим обновление UI здесь, чтобы избежать конфликтов перенаправления
+    // Временно отключим updateAuthUI здесь, чтобы точно понять проблему перенаправления
+    // updateAuthUI();
 
     // Проверяем состояние авторизации
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(async function(user) { // Сделаем асинхронной
         const currentPage = window.location.pathname.split('/').pop();
         const authPages = ['login.html', 'register.html'];
 
@@ -122,31 +125,32 @@ document.addEventListener('DOMContentLoaded', function() {
                  window.location.href = 'index.html';
             } else {
                 // Для всех остальных страниц (защищенных), если пользователь авторизован, получаем его данные
-                 firebase.firestore()
-                    .collection('users')
-                    .doc(user.uid)
-                    .get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            localStorage.setItem('user', JSON.stringify({
-                                uid: user.uid,
-                                email: user.email,
-                                role: userData.role || 'user',
-                                nickname: userData.nickname
-                            }));
-                             // Теперь, когда данные есть, можно обновить UI, если функция активна
-                             // updateAuthUI();
-                        } else {
-                             console.warn("User document not found for UID:", user.uid);
-                             // Если документа пользователя нет, возможно, это ошибка - выходим
-                             logout();
-                        }
-                    }).catch(error => {
-                        console.error("Error fetching user data:", error);
-                        // Если не удалось получить данные пользователя, возможно, стоит выйти
-                        logout();
-                    });
+                 try {
+                     const userDoc = await firebase.firestore()
+                        .collection('users')
+                        .doc(user.uid)
+                        .get();
+                    
+                    if (userDoc.exists) {
+                        const userData = userDoc.data();
+                        localStorage.setItem('user', JSON.stringify({
+                            uid: user.uid,
+                            email: user.email,
+                            role: userData.role || 'user',
+                            nickname: userData.nickname
+                        }));
+                         // Теперь, когда данные есть, можно обновить UI
+                         updateAuthUI(); // Вызываем обновление UI после загрузки данных
+                    } else {
+                         console.warn("User document not found for UID:", user.uid);
+                         // Если документа пользователя нет, возможно, это ошибка - выходим
+                         logout();
+                    }
+                 } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    // Если не удалось получить данные пользователя, возможно, стоит выйти
+                    logout();
+                 }
             }
         } else {
             // Пользователь не авторизован
@@ -155,16 +159,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.location.href = 'login.html';
             } else {
                  // Пользователь не авторизован и находится на странице входа или регистрации - остаемся
+                 updateAuthUI(); // Обновляем UI даже если пользователь не авторизован (скрыть защищенные элементы)
             }
         }
-        
-         // Возможно, стоит вызвать updateAuthUI здесь, после определения состояния авторизации
-         // updateAuthUI();
     });
     
-    // Временно отключим updateAuthUI здесь, чтобы точно понять проблему перенаправления
-    // updateAuthUI();
-
     // Добавляем обработчик для кнопки выхода, если она есть на странице
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Профиль - Legion</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-dark text-light">
+    <header class="py-3">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <h1 class="mb-0">
+              <a href="index.html" class="text-white text-decoration-none">
+                <i class="fas fa-dragon me-2"></i>Legion
+              </a>
+            </h1>
+          </div>
+          <div class="col-md-6">
+            <nav class="navbar navbar-expand-lg navbar-dark">
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="index.html"
+                      ><i class="fas fa-home me-1"></i> Главная</a
+                    >
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="members.html"
+                      ><i class="fas fa-users me-1"></i> Участники</a
+                    >
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="events.html"
+                      ><i class="fas fa-calendar-alt me-1"></i> События</a
+                    >
+                  </li>
+                  <li
+                    class="nav-item logged-in-only admin-only"
+                    style="display: none"
+                  >
+                    <a class="nav-link" href="packs.html"
+                      ><i class="fas fa-layer-group me-1"></i> Круги</a
+                    >
+                  </li>
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <a class="nav-link" href="statistics.html"
+                      ><i class="fas fa-chart-bar me-1"></i> Статистика</a
+                    >
+                  </li>
+
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <a class="nav-link active" href="profile.html">
+                      <i class="fas fa-user-circle me-1"></i> Профиль
+                    </a>
+                  </li>
+
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <a class="nav-link" href="#" id="logoutBtn">
+                      <i class="fas fa-sign-out-alt me-1"></i> Выход
+                    </a>
+                  </li>
+                  <li class="nav-item logged-in-only" style="display: none">
+                    <span class="nav-link"
+                      ><strong id="currentUserDisplay"></strong
+                    ></span>
+                  </li>
+
+                  <li class="nav-item logged-out-only">
+                    <a class="nav-link" href="login.html"
+                      ><i class="fas fa-sign-in-alt me-1"></i> Вход</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card bg-dark border-primary">
+            <div class="card-header bg-primary text-white">
+              <h2 class="mb-0">
+                <i class="fas fa-user-circle me-2"></i> Мой профиль
+              </h2>
+            </div>
+            <div class="card-body p-4">
+              <div id="profileInfo">
+                <p><strong>Ник:</strong> <span id="profileNickname"></span></p>
+                <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                <p>
+                  <strong>Telegram:</strong> <span id="profileTelegram"></span>
+                </p>
+                <p><strong>Класс:</strong> <span id="profileClass"></span></p>
+                <p>
+                  <strong>БМ:</strong> <span id="profileBattlePower"></span>
+                </p>
+                <p><strong>Круг:</strong> <span id="profilePack"></span></p>
+                <p><strong>Роль:</strong> <span id="profileRole"></span></p>
+                <button class="btn btn-primary mt-3" id="editProfileBtn">
+                  <i class="fas fa-edit me-2"></i>Редактировать
+                </button>
+              </div>
+
+              <div id="editProfileForm" style="display: none">
+                <h4 class="mb-3">Редактировать профиль</h4>
+                <div class="mb-3">
+                  <label for="editProfileNickname" class="form-label text-light"
+                    ><i class="fas fa-user me-2"></i>Ник</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control text-light bg-dark border-secondary"
+                    id="editProfileNickname"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="editProfileTelegram" class="form-label text-light"
+                    ><i class="fab fa-telegram me-2"></i>Telegram</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control text-light bg-dark border-secondary"
+                    id="editProfileTelegram"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="editProfileClass" class="form-label text-light"
+                    ><i class="fas fa-hat-wizard me-2"></i>Класс</label
+                  >
+                  <select
+                    class="form-select text-light bg-dark border-secondary"
+                    id="editProfileClass"
+                  >
+                    <option value="">Выберите класс</option>
+                    <option value="Страж">Страж</option>
+                    <option value="Друид">Друид</option>
+                    <option value="Жнец">Жнец</option>
+                    <option value="Стрелок">Стрелок</option>
+                    <option value="Жрец">Жрец</option>
+                    <option value="Лучник">Лучник</option>
+                    <option value="Оккультист">Оккультист</option>
+                    <option value="Маг">Маг</option>
+                    <option value="Воин">Воин</option>
+                    <option value="Чародей">Чародей</option>
+                    <option value="Призрак">Призрак</option>
+                    <option value="Убийца">Убийца</option>
+                    <option value="Оборотень">Оборотень</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label
+                    for="editProfileBattlePower"
+                    class="form-label text-light"
+                    ><i class="fas fa-fist-raised me-2"></i>БМ</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control text-light bg-dark border-secondary"
+                    id="editProfileBattlePower"
+                  />
+                </div>
+                <button class="btn btn-success mt-3 me-2" id="saveProfileBtn">
+                  <i class="fas fa-save me-2"></i>Сохранить
+                </button>
+                <button class="btn btn-secondary mt-3" id="cancelEditBtn">
+                  <i class="fas fa-times me-2"></i>Отмена
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h5><i class="fas fa-dragon me-2"></i> Гильдия Legion</h5>
+            <p>
+              Сайт для управления гильдией и отслеживания статистики участников.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="social-icons mb-3">
+              <a href="#" class="text-light me-3"
+                ><i class="fab fa-discord fa-lg"></i
+              ></a>
+              <a href="#" class="text-light me-3"
+                ><i class="fab fa-telegram fa-lg"></i
+              ></a>
+              <a href="#" class="text-light"><i class="fab fa-vk fa-lg"></i></a>
+            </div>
+            <p>&copy; <span id="currentYear"></span> Все права защищены.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script>
+      // Конфигурация Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDTtar4GY1kgVSM4pvJtmohK8zWbSAfU9M",
+        authDomain: "legion-1f3a5.firebaseapp.com",
+        projectId: "legion-1f3a5",
+        storageBucket: "legion-1f3a5.firebasestorage.app",
+        messagingSenderId: "925260753671",
+        appId: "1:925260753671:web:0c392cfb7cada1fedcf3a2",
+        measurementId: "G-FBFM45TRQ7",
+      };
+
+      // Инициализация Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+    </script>
+    <script src="auth.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        // Проверка авторизации на странице профиля
+        if (!firebase.auth().currentUser) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const user = firebase.auth().currentUser;
+
+        // Функция загрузки данных профиля
+        async function loadProfile() {
+          try {
+            const userDoc = await db.collection("users").doc(user.uid).get();
+            const memberDoc = await db
+              .collection("members")
+              .doc(user.uid)
+              .get();
+            const packDoc = memberDoc.data().pack_id
+              ? await db
+                  .collection("packs")
+                  .doc(memberDoc.data().pack_id.toString())
+                  .get()
+              : null; // Получаем данные круга
+
+            if (userDoc.exists && memberDoc.exists) {
+              const userData = userDoc.data();
+              const memberData = memberDoc.data();
+              const packData =
+                packDoc && packDoc.exists ? packDoc.data() : null;
+
+              document.getElementById("profileNickname").textContent =
+                memberData.nickname || "-";
+              document.getElementById("profileEmail").textContent =
+                userData.email || "-";
+              document.getElementById("profileTelegram").textContent =
+                memberData.telegram_username || "-";
+              document.getElementById("profileClass").textContent =
+                memberData.class || "-";
+              document.getElementById("profileBattlePower").textContent =
+                memberData.battle_power || "-";
+              document.getElementById("profilePack").textContent = packData
+                ? packData.name
+                : "Без круга";
+              document.getElementById("profileRole").textContent =
+                userData.role || "user";
+
+              // Заполняем форму редактирования
+              document.getElementById("editProfileNickname").value =
+                memberData.nickname || "";
+              document.getElementById("editProfileTelegram").value =
+                memberData.telegram_username || "";
+              document.getElementById("editProfileClass").value =
+                memberData.class || "";
+              document.getElementById("editProfileBattlePower").value =
+                memberData.battle_power || "";
+            } else {
+              alert("Ошибка загрузки данных профиля.");
+              logout(); // Если нет данных пользователя/участника, выходим
+            }
+          } catch (error) {
+            console.error("Error loading profile:", error);
+            alert("Ошибка загрузки данных профиля: " + error.message);
+            logout();
+          }
+        }
+
+        // Функция сохранения изменений профиля
+        async function saveProfile() {
+          const nickname = document.getElementById("editProfileNickname").value;
+          const telegram = document.getElementById("editProfileTelegram").value;
+          const characterClass =
+            document.getElementById("editProfileClass").value;
+          const battlePower = parseInt(
+            document.getElementById("editProfileBattlePower").value
+          );
+
+          // Обновляем документ участника (members)
+          try {
+            await db.collection("members").doc(user.uid).update({
+              nickname: nickname,
+              telegram_username: telegram,
+              class: characterClass,
+              battle_power: battlePower,
+            });
+            // Также можно обновить данные в документе пользователя (users), если нужно
+            // await db.collection('users').doc(user.uid).update({ nickname: nickname });
+
+            alert("Профиль успешно обновлен!");
+            toggleEditMode(); // Переключаемся обратно в режим просмотра
+            loadProfile(); // Перезагружаем данные
+          } catch (error) {
+            console.error("Error saving profile:", error);
+            alert("Ошибка сохранения профиля: " + error.message);
+          }
+        }
+
+        // Переключение между режимом просмотра и редактирования
+        function toggleEditMode() {
+          const profileInfo = document.getElementById("profileInfo");
+          const editProfileForm = document.getElementById("editProfileForm");
+
+          if (profileInfo.style.display !== "none") {
+            profileInfo.style.display = "none";
+            editProfileForm.style.display = "block";
+          } else {
+            editProfileForm.style.display = "none";
+            profileInfo.style.display = "block";
+          }
+        }
+
+        // Обработчики событий кнопок
+        document
+          .getElementById("editProfileBtn")
+          .addEventListener("click", toggleEditMode);
+        document
+          .getElementById("saveProfileBtn")
+          .addEventListener("click", saveProfile);
+        document
+          .getElementById("cancelEditBtn")
+          .addEventListener("click", toggleEditMode);
+
+        // Загружаем данные профиля при загрузке страницы
+        loadProfile();
+      });
+
+      // Добавляем обработчик для кнопки выхода, если она есть на странице
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          logout();
+        });
+      }
+    </script>
+  </body>
+</html>
