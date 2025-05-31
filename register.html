@@ -8,33 +8,58 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body class="bg-light">
     <div
       class="container d-flex align-items-center justify-content-center min-vh-100"
     >
-      <div class="card shadow p-4" style="min-width: 350px">
+      <div
+        class="card shadow p-4"
+        style="min-width: 350px; max-width: 400px; width: 100%"
+      >
         <h2 class="mb-4 text-center">Регистрация в Legion</h2>
         <form id="registerForm">
           <div class="mb-3">
-            <label for="username" class="form-label">Логин</label>
-            <input type="text" class="form-control" id="username" required />
+            <label for="username" class="form-label"
+              ><i class="fas fa-user me-2"></i>Логин</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              required
+              placeholder="Введите логин"
+            />
           </div>
           <div class="mb-3">
-            <label for="password" class="form-label">Пароль</label>
+            <label for="password" class="form-label"
+              ><i class="fas fa-key me-2"></i>Пароль</label
+            >
             <input
               type="password"
               class="form-control"
               id="password"
               required
+              placeholder="Придумайте пароль"
             />
           </div>
           <div class="mb-3">
-            <label for="nickname" class="form-label">Ник в игре</label>
-            <input type="text" class="form-control" id="nickname" required />
+            <label for="nickname" class="form-label"
+              ><i class="fas fa-gamepad me-2"></i>Ник в игре</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="nickname"
+              required
+              placeholder="Ваш ник в игре"
+            />
           </div>
           <div class="mb-3">
-            <label for="class" class="form-label">Класс</label>
+            <label for="class" class="form-label"
+              ><i class="fas fa-hat-wizard me-2"></i>Класс</label
+            >
             <select class="form-select" id="class" required>
               <option value="">Выберите класс</option>
               <option value="Страж">Страж</option>
@@ -53,7 +78,9 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="battlePower" class="form-label">Боевая мощь</label>
+            <label for="battlePower" class="form-label"
+              ><i class="fas fa-fist-raised me-2"></i>Боевая мощь</label
+            >
             <input
               type="number"
               class="form-control"
@@ -61,13 +88,19 @@
               min="1"
               value="1000"
               required
+              placeholder="Ваша боевая мощь"
             />
           </div>
           <div class="mb-3">
             <label for="telegramUsername" class="form-label"
-              >Ник в Telegram</label
+              ><i class="fab fa-telegram me-2"></i>Ник в Telegram</label
             >
-            <input type="text" class="form-control" id="telegramUsername" />
+            <input
+              type="text"
+              class="form-control"
+              id="telegramUsername"
+              placeholder="@username"
+            />
           </div>
           <button type="submit" class="btn btn-success w-100">
             Зарегистрироваться
@@ -80,6 +113,7 @@
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
       const sheetdbApiUrl = "https://sheetdb.io/api/v1/8nxo7p9xdzlsi";
       async function getAllUsers() {

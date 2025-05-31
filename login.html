@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Вход - Гильдия Legion</title>
+    <title>Вход - Legion</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,27 +28,45 @@
     <div
       class="container d-flex align-items-center justify-content-center min-vh-100"
     >
-      <div class="card shadow p-4" style="min-width: 350px">
+      <div
+        class="card shadow p-4"
+        style="min-width: 350px; max-width: 400px; width: 100%"
+      >
         <h2 class="mb-4 text-center">Вход в Legion</h2>
         <form id="loginForm">
           <div class="mb-3">
-            <label for="username" class="form-label">Логин</label>
-            <input type="text" class="form-control" id="username" required />
+            <label for="username" class="form-label"
+              ><i class="fas fa-user me-2"></i>Логин</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              required
+              placeholder="Введите логин"
+            />
           </div>
           <div class="mb-3">
-            <label for="password" class="form-label">Пароль</label>
+            <label for="password" class="form-label"
+              ><i class="fas fa-key me-2"></i>Пароль</label
+            >
             <input
               type="password"
               class="form-control"
               id="password"
               required
+              placeholder="Введите пароль"
             />
           </div>
           <button type="submit" class="btn btn-primary w-100">Войти</button>
         </form>
         <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
+        <div class="mt-3 text-center">
+          <a href="register.html">Нет аккаунта? Зарегистрироваться</a>
+        </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
       const sheetdbApiUrl = "https://sheetdb.io/api/v1/8nxo7p9xdzlsi";
       async function getAllUsers() {
