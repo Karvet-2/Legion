@@ -108,17 +108,21 @@ function updateAuthUI() {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
-    updateAuthUI();
+    // updateAuthUI(); // Пока отключим обновление UI здесь, чтобы избежать конфликтов перенаправления
 
     // Проверяем состояние авторизации
     firebase.auth().onAuthStateChanged(function(user) {
         const currentPage = window.location.pathname.split('/').pop();
-        
+        const authPages = ['login.html', 'register.html'];
+
         if (user) {
             // Пользователь авторизован
-            // Перенаправляем на главную, только если не на страницах входа/регистрации
-            if (currentPage !== 'login.html' && currentPage !== 'register.html') {
-                firebase.firestore()
+            // Если пользователь на странице входа или регистрации, перенаправляем на главную
+            if (authPages.includes(currentPage)) {
+                 window.location.href = 'index.html';
+            } else {
+                // Для всех остальных страниц (защищенных), если пользователь авторизован, получаем его данные
+                 firebase.firestore()
                     .collection('users')
                     .doc(user.uid)
                     .get()
@@ -131,25 +135,42 @@ document.addEventListener('DOMContentLoaded', function() {
                                 role: userData.role || 'user',
                                 nickname: userData.nickname
                             }));
+                             // Теперь, когда данные есть, можно обновить UI, если функция активна
+                             // updateAuthUI();
+                        } else {
+                             console.warn("User document not found for UID:", user.uid);
+                             // Если документа пользователя нет, возможно, это ошибка - выходим
+                             logout();
                         }
-                        // Перенаправляем только после получения данных пользователя
-                        window.location.href = 'index.html';
                     }).catch(error => {
                         console.error("Error fetching user data:", error);
                         // Если не удалось получить данные пользователя, возможно, стоит выйти
                         logout();
                     });
-            } else {
-                // Если пользователь авторизован, но находится на странице входа/регистрации, остаемся там
-                // (Это нужно, если мы хотим позволить авторизованным пользователям видеть эти страницы)
-                // Если нужно сразу перенаправлять на главную, можно убрать этот else
             }
         } else {
             // Пользователь не авторизован
-            // Перенаправляем на страницу входа, только если не на страницах входа/регистрации
-            if (currentPage !== 'login.html' && currentPage !== 'register.html') {
+            // Если пользователь НЕ на странице входа или регистрации, перенаправляем на вход
+            if (!authPages.includes(currentPage)) {
                 window.location.href = 'login.html';
+            } else {
+                 // Пользователь не авторизован и находится на странице входа или регистрации - остаемся
             }
         }
+        
+         // Возможно, стоит вызвать updateAuthUI здесь, после определения состояния авторизации
+         // updateAuthUI();
     });
+    
+    // Временно отключим updateAuthUI здесь, чтобы точно понять проблему перенаправления
+    // updateAuthUI();
+
+    // Добавляем обработчик для кнопки выхода, если она есть на странице
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
 }); 
