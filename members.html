@@ -523,6 +523,7 @@
       async function saveMember(member) {
         const { data, error } = await supabase.from("members").insert([member]);
         if (error) {
+          console.log(error);
           alert("Ошибка добавления участника: " + error.message);
         }
         return data;
@@ -762,6 +763,16 @@
             await loadMembers();
           });
       });
+
+      async function registerUser(user) {
+        const { data, error } = await supabase.from("users").insert([user]);
+        if (error) {
+          console.log(error);
+          alert("Ошибка регистрации: " + error.message);
+          return null;
+        }
+        return data;
+      }
     </script>
   </body>
 </html>
