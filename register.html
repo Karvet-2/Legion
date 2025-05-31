@@ -145,23 +145,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <!-- Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="auth.js"></script>
     <script>
-      // Конфигурация Firebase
-      const firebaseConfig = {
-        apiKey: "AIzaSyDTtar4GY1kgVSM4pvJtmohK8zWbSAfU9M",
-        authDomain: "legion-1f3a5.firebaseapp.com",
-        projectId: "legion-1f3a5",
-        storageBucket: "legion-1f3a5.firebasestorage.app",
-        messagingSenderId: "925260753671",
-        appId: "1:925260753671:web:0c392cfb7cada1fedcf3a2",
-        measurementId: "G-FBFM45TRQ7",
-      };
-
-      // Инициализация Firebase
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-
       document
         .getElementById("registerForm")
         .addEventListener("submit", async function (e) {
