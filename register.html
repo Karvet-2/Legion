@@ -4,264 +4,190 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Регистрация - Legion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      }
-      .card {
-        border: none;
-        border-radius: 18px;
-        box-shadow: 0 4px 24px rgba(106, 17, 203, 0.1);
-        background: #fff;
-      }
-      .form-label {
-        font-weight: 500;
-        color: #6a11cb;
-      }
-      .form-control,
-      .form-select {
-        border-radius: 10px;
-        padding: 0.5rem 0.75rem;
-        font-size: 1rem;
-      }
-      .btn-legion {
-        background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-        color: #fff;
-        border: none;
-        font-weight: 600;
-        border-radius: 10px;
-        transition: background 0.2s;
-      }
-      .btn-legion:hover {
-        background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
-        color: #fff;
-      }
-      .card-title {
-        color: #6a11cb;
-        font-weight: 700;
-        letter-spacing: 1px;
-      }
-      .alert {
-        border-radius: 10px;
-        padding: 0.5rem 1rem;
-        font-size: 0.95rem;
-      }
-      @media (max-width: 400px) {
-        .card {
-          padding: 1rem !important;
-        }
-      }
-    </style>
   </head>
-  <body>
-    <div
-      class="container d-flex align-items-center justify-content-center min-vh-100"
-    >
-      <div
-        class="card shadow p-3 p-md-4"
-        style="min-width: 320px; max-width: 370px; width: 100%"
-      >
-        <h2 class="mb-3 text-center card-title">
-          <i class="fas fa-user-plus me-2"></i>Регистрация
-        </h2>
-        <form id="registerForm" autocomplete="off">
-          <div class="mb-2">
-            <label for="username" class="form-label"
-              ><i class="fas fa-user me-1"></i>Логин</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="username"
-              required
-              placeholder="Введите логин"
-              maxlength="20"
-            />
+  <body class="bg-dark text-light">
+    <div class="container">
+      <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-8 col-lg-6">
+          <div class="text-center mb-4">
+            <h1 class="display-4"><i class="fas fa-dragon me-2"></i>Legion</h1>
+            <p class="lead">Регистрация нового участника</p>
           </div>
-          <div class="mb-2">
-            <label for="password" class="form-label"
-              ><i class="fas fa-key me-1"></i>Пароль</label
-            >
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              required
-              placeholder="Придумайте пароль"
-              maxlength="32"
-            />
+
+          <div class="card bg-dark border-primary">
+            <div class="card-body p-4">
+              <form id="registerForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">
+                      <i class="fas fa-envelope me-2"></i>Email *
+                    </label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">
+                      <i class="fas fa-lock me-2"></i>Пароль *
+                    </label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="nickname" class="form-label">
+                      <i class="fas fa-user me-2"></i>Ник в игре *
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nickname"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="telegram" class="form-label">
+                      <i class="fab fa-telegram me-2"></i>Telegram *
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telegram"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="class" class="form-label">
+                      <i class="fas fa-hat-wizard me-2"></i>Класс *
+                    </label>
+                    <select class="form-select" id="class" required>
+                      <option value="">Выберите класс</option>
+                      <option value="Страж">Страж</option>
+                      <option value="Друид">Друид</option>
+                      <option value="Жнец">Жнец</option>
+                      <option value="Стрелок">Стрелок</option>
+                      <option value="Жрец">Жрец</option>
+                      <option value="Лучник">Лучник</option>
+                      <option value="Оккультист">Оккультист</option>
+                      <option value="Маг">Маг</option>
+                      <option value="Воин">Воин</option>
+                      <option value="Чародей">Чародей</option>
+                      <option value="Призрак">Призрак</option>
+                      <option value="Убийца">Убийца</option>
+                      <option value="Оборотень">Оборотень</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="battlePower" class="form-label">
+                      <i class="fas fa-fist-raised me-2"></i>БМ *
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="battlePower"
+                      value="1000"
+                      min="1"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Зарегистрироваться
+                  </button>
+                  <a href="login.html" class="btn btn-outline-primary">
+                    <i class="fas fa-sign-in-alt me-2"></i>Вернуться к входу
+                  </a>
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="mb-2">
-            <label for="nickname" class="form-label"
-              ><i class="fas fa-gamepad me-1"></i>Ник в игре</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="nickname"
-              required
-              placeholder="Ваш ник в игре"
-              maxlength="20"
-            />
-          </div>
-          <div class="mb-2">
-            <label for="class" class="form-label"
-              ><i class="fas fa-hat-wizard me-1"></i>Класс</label
-            >
-            <select class="form-select" id="class" required>
-              <option value="">Выберите класс</option>
-              <option value="Страж">Страж</option>
-              <option value="Друид">Друид</option>
-              <option value="Жнец">Жнец</option>
-              <option value="Стрелок">Стрелок</option>
-              <option value="Жрец">Жрец</option>
-              <option value="Лучник">Лучник</option>
-              <option value="Оккультист">Оккультист</option>
-              <option value="Маг">Маг</option>
-              <option value="Воин">Воин</option>
-              <option value="Чародей">Чародей</option>
-              <option value="Призрак">Призрак</option>
-              <option value="Убийца">Убийца</option>
-              <option value="Оборотень">Оборотень</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="battlePower" class="form-label"
-              ><i class="fas fa-fist-raised me-1"></i>Боевая мощь</label
-            >
-            <input
-              type="number"
-              class="form-control"
-              id="battlePower"
-              min="1"
-              value="1000"
-              required
-              placeholder="Ваша боевая мощь"
-            />
-          </div>
-          <div class="mb-2">
-            <label for="telegramUsername" class="form-label"
-              ><i class="fab fa-telegram me-1"></i>Telegram</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="telegramUsername"
-              placeholder="@username"
-              maxlength="32"
-            />
-          </div>
-          <button type="submit" class="btn btn-legion w-100 mt-2">
-            Зарегистрироваться
-          </button>
-        </form>
-        <div id="registerError" class="alert alert-danger mt-3 d-none"></div>
-        <div id="registerSuccess" class="alert alert-success mt-3 d-none"></div>
-        <div class="mt-3 text-center">
-          <a href="login.html" style="color: #6a11cb; font-weight: 500"
-            >Уже есть аккаунт? Войти</a
-          >
         </div>
       </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-      const sheetdbApiUrl = "https://sheetdb.io/api/v1/8nxo7p9xdzlsi";
-      async function getAllUsers() {
-        const res = await fetch(`${sheetdbApiUrl}?sheet=users`);
-        return await res.json();
-      }
-      async function getAllMembers() {
-        const res = await fetch(`${sheetdbApiUrl}?sheet=members`);
-        return await res.json();
-      }
-      async function registerUser(user) {
-        const res = await fetch(`${sheetdbApiUrl}?sheet=users`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: [user] }),
-        });
-        return await res.json();
-      }
-      async function registerMember(member) {
-        const res = await fetch(`${sheetdbApiUrl}?sheet=members`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: [member] }),
-        });
-        return await res.json();
-      }
-      async function getNextId(getAllFunc) {
-        const items = await getAllFunc();
-        if (!items.length) return 1;
-        return Math.max(...items.map((i) => Number(i.id) || 0)) + 1;
-      }
+      const supabaseUrl = "https://rlfhdyfjovrlelrxtrhi.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZmhkeWZqb3ZybGVscnh0cmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MzczOTIsImV4cCI6MjA2NDIxMzM5Mn0.fovIsGABqoC0lXjuynuAW2tbEhlRBY9bGr8UUNJ39Uk";
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
       document
         .getElementById("registerForm")
         .addEventListener("submit", async function (e) {
           e.preventDefault();
-          const username = document.getElementById("username").value.trim();
+
+          const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
-          const nickname = document.getElementById("nickname").value.trim();
-          const className = document.getElementById("class").value;
-          const battlePower = document.getElementById("battlePower").value;
-          const telegramUsername = document
-            .getElementById("telegramUsername")
-            .value.trim();
-          if (
-            !username ||
-            !password ||
-            !nickname ||
-            !className ||
-            !battlePower
-          ) {
-            showError("Пожалуйста, заполните все обязательные поля");
-            return;
+          const nickname = document.getElementById("nickname").value;
+          const telegram = document.getElementById("telegram").value;
+          const characterClass = document.getElementById("class").value;
+          const battlePower = parseInt(
+            document.getElementById("battlePower").value
+          );
+
+          try {
+            // Регистрация пользователя
+            const { data: authData, error: authError } =
+              await supabase.auth.signUp({
+                email: email,
+                password: password,
+              });
+
+            if (authError) throw authError;
+
+            // Создание профиля участника
+            const { error: profileError } = await supabase
+              .from("members")
+              .insert([
+                {
+                  user_id: authData.user.id,
+                  nickname: nickname,
+                  telegram_username: telegram,
+                  class: characterClass,
+                  battle_power: battlePower,
+                  pack_id: null, // По умолчанию без круга
+                },
+              ]);
+
+            if (profileError) throw profileError;
+
+            alert("Регистрация успешна! Теперь вы можете войти в систему.");
+            window.location.href = "login.html";
+          } catch (error) {
+            alert("Ошибка регистрации: " + error.message);
           }
-          // Проверка уникальности username
-          const users = await getAllUsers();
-          if (users.some((u) => u.username === username)) {
-            showError("Пользователь с таким логином уже существует");
-            return;
-          }
-          // Генерируем id
-          const userId = await getNextId(getAllUsers);
-          const memberId = await getNextId(getAllMembers);
-          // Регистрируем пользователя
-          const user = { id: userId, username, password };
-          await registerUser(user);
-          // Регистрируем участника
-          const member = {
-            id: memberId,
-            nickname,
-            class: className,
-            battle_power: battlePower,
-            pack_id: "",
-            telegram_username: telegramUsername,
-            user_id: userId,
-          };
-          await registerMember(member);
-          // Автоматический вход
-          localStorage.setItem("userId", userId);
-          localStorage.setItem("username", username);
-          showSuccess("Регистрация успешна! Перенаправление...");
-          setTimeout(() => (window.location.href = "members.html"), 1200);
         });
-      function showError(msg) {
-        document.getElementById("registerError").textContent = msg;
-        document.getElementById("registerError").classList.remove("d-none");
-        document.getElementById("registerSuccess").classList.add("d-none");
-      }
-      function showSuccess(msg) {
-        document.getElementById("registerSuccess").textContent = msg;
-        document.getElementById("registerSuccess").classList.remove("d-none");
-        document.getElementById("registerError").classList.add("d-none");
-      }
     </script>
   </body>
 </html>

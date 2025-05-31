@@ -2,15 +2,16 @@
  * Авторизация и управление пользователями
  */
 
-// Проверка, вошел ли пользователь в систему
+// Функция проверки авторизации
 function isLoggedIn() {
-    return localStorage.getItem('currentUser') !== null;
+    const user = localStorage.getItem('user');
+    return user !== null;
 }
 
-// Проверка, является ли текущий пользователь администратором
+// Функция проверки прав администратора
 function isAdmin() {
-    const currentUser = getCurrentUser();
-    return currentUser && currentUser.role === 'admin';
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user && user.role === 'admin';
 }
 
 // Проверка авторизации (для защиты страниц)
@@ -38,8 +39,8 @@ function login(username, password) {
 
 // Выход из системы
 function logout() {
-    localStorage.removeItem('currentUser');
-    window.location.href = 'index.html';
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
 }
 
 // Получение информации о текущем пользователе
